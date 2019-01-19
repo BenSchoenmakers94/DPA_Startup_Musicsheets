@@ -20,6 +20,7 @@ namespace DPA_Musicsheets.ViewModels
         private string _text;
         private string _previousText;
         private string _nextText;
+        private int textCursorIndex;
 
         /// <summary>
         /// This text will be in the textbox.
@@ -52,6 +53,7 @@ namespace DPA_Musicsheets.ViewModels
             _musicLoader = musicLoader;
             _musicLoader.LilypondViewModel = this;
             _text = "Your lilypond text will appear here.";
+            textCursorIndex = 0;
             OwnEventmanager.Manager.Subscribe("addLilyPondToken", AddSymbol);
         }
 
@@ -62,10 +64,7 @@ namespace DPA_Musicsheets.ViewModels
             _textChangedByLoad = false;
         }
 
-        private void AddSymbol(string symbol)
-        {
-            LilypondText += symbol;
-        }
+        private void AddSymbol(string symbol) => LilypondText = LilypondText?.Insert(textCursorIndex, symbol);
 
         /// <summary>
         /// This occurs when the text in the textbox has changed. This can either be by loading or typing.
@@ -110,9 +109,16 @@ namespace DPA_Musicsheets.ViewModels
             RedoCommand.RaiseCanExecuteChanged();
         }, () => _nextText != null && _nextText != LilypondText);
 
+        public ICommand PlacedCursorCommand => new RelayCommand<RoutedEventArgs>(e =>
+        {
+            TextBox textBox = e.Source as TextBox;
+            textCursorIndex = textBox.CaretIndex;
+        });
+
         public ICommand SaveAsCommand => new RelayCommand(() =>
         {
             // TODO: In the application a lot of classes know which filetypes are supported. Lots and lots of repeated code here...
+            // TODO save file event?
             // Can this be done better?
             SaveFileDialog saveFileDialog = new SaveFileDialog() { Filter = "Midi|*.mid|Lilypond|*.ly|PDF|*.pdf" };
             if (saveFileDialog.ShowDialog() == true)

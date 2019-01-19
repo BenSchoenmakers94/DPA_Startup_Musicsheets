@@ -73,7 +73,7 @@ namespace DPA_Musicsheets.ViewModels
             {
                 Key key = e.Key == Key.System ? e.SystemKey : e.Key;
                 downKeyQueue.Add(key);
-                //e.Handled = true;
+                e.Handled = true;
             }
             Console.WriteLine($@"Key down: {e.Key}");
         });
@@ -186,10 +186,10 @@ namespace DPA_Musicsheets.ViewModels
             {
                 firstCommand.Execute(action, param);
             }
-            else
-            {
-                ShowErrorDialog("Something went wrong. \nPlease try again.");
-            }
+            //else
+            //{
+            //    ShowErrorDialog("Something went wrong. \nPlease try again.");
+            //}
         }
 
         public ICommand OnWindowClosingCommand => new RelayCommand(() =>
