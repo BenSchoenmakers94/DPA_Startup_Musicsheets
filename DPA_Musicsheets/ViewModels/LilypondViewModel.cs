@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using DPA_Musicsheets.Models.Events;
 
 namespace DPA_Musicsheets.ViewModels
 {
@@ -26,10 +27,7 @@ namespace DPA_Musicsheets.ViewModels
         /// </summary>
         public string LilypondText
         {
-            get
-            {
-                return _text;
-            }
+            get => _text;
             set
             {
                 if (!_waitingForRender && !_textChangedByLoad)
@@ -53,8 +51,8 @@ namespace DPA_Musicsheets.ViewModels
             _mainViewModel = mainViewModel;
             _musicLoader = musicLoader;
             _musicLoader.LilypondViewModel = this;
-            
             _text = "Your lilypond text will appear here.";
+            OwnEventmanager.Manager.Subscribe("addLilyPondToken", AddSymbol);
         }
 
         public void LilypondTextLoaded(string text)
@@ -62,6 +60,11 @@ namespace DPA_Musicsheets.ViewModels
             _textChangedByLoad = true;
             LilypondText = _previousText = text;
             _textChangedByLoad = false;
+        }
+
+        private void AddSymbol(string symbol)
+        {
+            LilypondText += symbol;
         }
 
         /// <summary>

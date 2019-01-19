@@ -1,4 +1,5 @@
 ﻿using DPA_Musicsheets.Managers;
+using DPA_Musicsheets.Models.Events;
 
 namespace DPA_Musicsheets.Models.Commands
 {
@@ -13,10 +14,7 @@ namespace DPA_Musicsheets.Models.Commands
             // parameter is the optional additional time
             if (CanExecute(actionOption))
             {
-                //TODO move elsewhere, let the command just pass on the param to a function
-                if(string.IsNullOrEmpty(parameter)) parameter = "4/4";
-                // T = 4/4, T+4 = 4/4, T+3 = 3/4, T+6 = 6/8
-                //TODO add time, depending on parameter
+                OwnEventmanager.Manager.DispatchEvent("addLilyPondToken", "\\time " + parameter);
             }
             else
             {

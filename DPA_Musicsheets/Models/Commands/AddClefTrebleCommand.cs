@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Input;
 using DPA_Musicsheets.Managers;
+using DPA_Musicsheets.Models.Events;
 
 namespace DPA_Musicsheets.Models.Commands
 {
@@ -15,7 +16,7 @@ namespace DPA_Musicsheets.Models.Commands
             //parameter will be empty
             if (CanExecute(actionOption))
             {
-                //TODO add clef treble
+                OwnEventmanager.Manager.DispatchEvent("addLilyPondToken", "\\clef treble");
             }
             else
             {

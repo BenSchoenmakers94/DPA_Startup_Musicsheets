@@ -1,4 +1,5 @@
 ﻿using DPA_Musicsheets.Managers;
+using DPA_Musicsheets.Models.Events;
 
 namespace DPA_Musicsheets.Models.Commands
 {
@@ -10,10 +11,10 @@ namespace DPA_Musicsheets.Models.Commands
         }
         public override void Execute(ActionOption actionOption, string parameter = null)
         {
-            // paramter will be empty
+            // parameter will be empty
             if (CanExecute(actionOption))
             {
-                //TODO add tempo (speed) 4=120
+                OwnEventmanager.Manager.DispatchEvent("addLilyPondToken", "\\tempo4=120");
             }
             else
             {

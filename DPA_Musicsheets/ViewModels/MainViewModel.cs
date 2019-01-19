@@ -5,6 +5,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using DPA_Musicsheets.Models.Commands;
 
@@ -66,26 +67,35 @@ namespace DPA_Musicsheets.ViewModels
             Console.WriteLine(@"Maingrid Lost focus");
         });
 
-        public ICommand OnKeyDownCommand => new RelayCommand<KeyEventArgs>((e) =>
+        public ICommand OnKeyDownCommand => new RelayCommand<KeyEventArgs>(e =>
         {
             if (!downKeyQueue.Contains(e.Key))
             {
-                downKeyQueue.Add(e.Key);
+                Key key = e.Key == Key.System ? e.SystemKey : e.Key;
+                downKeyQueue.Add(key);
+                //e.Handled = true;
             }
             Console.WriteLine($@"Key down: {e.Key}");
         });
 
-        public ICommand OnKeyUpCommand => new RelayCommand<KeyEventArgs> ((e) =>
+        public ICommand OnKeyUpCommand => new RelayCommand<KeyEventArgs> (e =>
         {
-            upKeyQueue.Add(e.Key);
-            downKeyQueue.RemoveAt(downKeyQueue.FindIndex(k => k == e.Key));
-            if (!downKeyQueue.Any())
+            Key key = e.Key == Key.System ? e.SystemKey : e.Key;
+            upKeyQueue.Add(key);
+            if (downKeyQueue.Contains(key))
             {
-                upKeyQueue.Reverse();
+                downKeyQueue.Remove(key);
+            }
+            if (!downKeyQueue.Any() && upKeyQueue.Count > 1)
+            {
+                if (upKeyQueue[0] != Key.LeftAlt && upKeyQueue[0] != Key.RightAlt)
+                {
+                    upKeyQueue.Reverse();
+                }
                 HandleCommand(upKeyQueue);
                 upKeyQueue.Clear();
             }
-            Console.WriteLine($@"Key Up: {e.Key}");
+            Console.WriteLine($@"Key Up: {key}");
         });
 
         private string OpenOpenFileDialog(string filter)
@@ -100,12 +110,16 @@ namespace DPA_Musicsheets.ViewModels
             return saveFileDialog.ShowDialog() == true ? saveFileDialog.FileName : null;
         }
 
-        private void HandleCommand(List<Key> keyCombo)
+        private void ShowErrorDialog(string error)
+        {
+            MessageBox.Show(error, "Alert", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private void HandleCommand(IReadOnlyList<Key> keyCombo)
         {
             if (!keyCombo.Any() || keyCombo.Count < 2 || keyCombo.Count > 3)
             {
-                //Not a known command based on metadata
-                //TODO handle
+                //Not a known command based on metadata, so it's just a symbol add in the box (presumably)
                 return;
             }
             ActionOption action = ActionOption.Undefined;
@@ -115,9 +129,13 @@ namespace DPA_Musicsheets.ViewModels
                 string filter = "Midi or LilyPond files (*.mid *.ly)|*.mid;*.ly";
                 if (keyCombo[1] == Key.O)
                 {
-                    action = ActionOption.OpenFile;
                     param = OpenOpenFileDialog(filter);
-                    FileName = param;
+                    if (param != null)
+                    {
+                        // Dialog has been cancelled or has failed, abort
+                        action = ActionOption.OpenFile;
+                        FileName = param;
+                    }
                 }
                 else if (keyCombo[1] == Key.S)
                 {
@@ -131,6 +149,11 @@ namespace DPA_Musicsheets.ViewModels
                         filter = "Pdf files (*.pdf)|.pdf";
                     }
                     param = OpenSaveFileDialog(filter);
+                    if (param == null)
+                    {
+                        // Dialog has been cancelled or has failed, abort
+                        action = ActionOption.Undefined;
+                    }
                 }
             }
             else if (keyCombo[0] == Key.LeftAlt || keyCombo[0] == Key.RightAlt)
@@ -153,6 +176,7 @@ namespace DPA_Musicsheets.ViewModels
                         else if (keyCombo[2] == Key.D6) param = "6/8";
                         else
                         {
+                            // Bad combo, abort
                             action = ActionOption.Undefined;
                         }
                         break;
@@ -164,7 +188,7 @@ namespace DPA_Musicsheets.ViewModels
             }
             else
             {
-                //TODO handle bad input
+                ShowErrorDialog("Something went wrong. \nPlease try again.");
             }
         }
 
