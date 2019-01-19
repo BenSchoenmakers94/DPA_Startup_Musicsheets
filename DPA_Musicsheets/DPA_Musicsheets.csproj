@@ -125,6 +125,7 @@
     <Compile Include="Models\LilypondToken.cs" />
     <Compile Include="Models\LilypondTokenKind.cs" />
     <Compile Include="ViewModels\MidiPlayerViewModel.cs" />
+    <Compile Include="ViewModels\ShortcutHandler.cs" />
     <Compile Include="ViewModels\StaffsViewModel.cs" />
     <Compile Include="Views\MidiPlayerCtrl.xaml.cs">
       <DependentUpon>MidiPlayerCtrl.xaml</DependentUpon>
