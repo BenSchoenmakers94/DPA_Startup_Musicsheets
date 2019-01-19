@@ -1,4 +1,6 @@
-﻿namespace DPA_Musicsheets.Models.Domain
+﻿using System.Collections.Generic;
+
+namespace DPA_Musicsheets.Models.Domain
 {
     public enum RepeatType
     {
@@ -9,6 +11,7 @@
     public class Bar : Symbol
     {
         public RepeatType type { get; private set; }
+        public List<Note> notes { get; set; }
 
         public Bar(RepeatType repeatType)
         {

@@ -7,19 +7,14 @@ namespace DPA_Musicsheets.Models.Domain
     {
         public Staff()
         {
-         //   Children = new List<StaffElement>();
+            bars = new List<Bar>();
         }
 
-        public Staff Parent { get; set; }
-       // public List<StaffElement> Children { get; private set; }
-        public Tuple<int, int> Rhythm { get; set; }
-        public int Bpm { get; set; }
+        public Staff parent { get; set; }
+        public List<Bar> bars { get; private set; }
+        public Tuple<int, int> rhythm { get; set; }
+        public int bpm { get; set; }
 
-        public double BarDuration => (double)Rhythm.Item1 / (double)Rhythm.Item2;
-
-//        public override void Accept(IStaffElementVisitor visitor)
-//        {
-//            visitor.Visit(this);
-//        }
+        public double BarDuration => (double)rhythm.Item1 / (double)rhythm.Item2;
     }
 }
