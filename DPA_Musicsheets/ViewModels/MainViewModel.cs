@@ -98,7 +98,10 @@ namespace DPA_Musicsheets.ViewModels
        {
            // Get key or system key (in case of using ALT)
            Key key = e.Key == Key.System ? e.SystemKey : e.Key;
-           upKeyQueue.Add(key);
+           if (!upKeyQueue.Contains(key))
+           {
+               upKeyQueue.Add(key);
+           }
            if (downKeyQueue.Contains(key))
            {
                downKeyQueue.Remove(key);

@@ -119,7 +119,6 @@
     <Compile Include="Models\Domain\Note.cs" />
     <Compile Include="Models\Domain\Symbol.cs" />
     <Compile Include="Models\Domain\Tempo.cs" />
-    <Compile Include="Models\Events\AddLilyPondTokenEvent.cs" />
     <Compile Include="Models\Events\Event.cs" />
     <Compile Include="Models\Events\OwnEventmanager.cs" />
     <Compile Include="Models\LilypondToken.cs" />
