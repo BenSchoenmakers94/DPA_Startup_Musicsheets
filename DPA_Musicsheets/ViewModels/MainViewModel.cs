@@ -78,25 +78,25 @@ namespace DPA_Musicsheets.ViewModels
             Console.WriteLine($@"Key down: {e.Key}");
         });
 
-        public ICommand OnKeyUpCommand => new RelayCommand<KeyEventArgs> (e =>
-        {
-            Key key = e.Key == Key.System ? e.SystemKey : e.Key;
-            upKeyQueue.Add(key);
-            if (downKeyQueue.Contains(key))
-            {
-                downKeyQueue.Remove(key);
-            }
-            if (!downKeyQueue.Any() && upKeyQueue.Count > 1)
-            {
-                if (upKeyQueue[0] != Key.LeftAlt && upKeyQueue[0] != Key.RightAlt)
-                {
-                    upKeyQueue.Reverse();
-                }
-                HandleCommand(upKeyQueue);
-                upKeyQueue.Clear();
-            }
-            Console.WriteLine($@"Key Up: {key}");
-        });
+        public ICommand OnKeyUpCommand => new RelayCommand<KeyEventArgs>(e =>
+       {
+           Key key = e.Key == Key.System ? e.SystemKey : e.Key;
+           upKeyQueue.Add(key);
+           if (downKeyQueue.Contains(key))
+           {
+               downKeyQueue.Remove(key);
+           }
+           if (!downKeyQueue.Any() && upKeyQueue.Count > 1)
+           {
+               if (upKeyQueue[0] != Key.LeftAlt && upKeyQueue[0] != Key.RightAlt)
+               {
+                   upKeyQueue.Reverse();
+               }
+               HandleCommand(upKeyQueue);
+               upKeyQueue.Clear();
+           }
+           Console.WriteLine($@"Key Up: {key}");
+       });
 
         private string OpenOpenFileDialog(string filter)
         {
@@ -143,7 +143,8 @@ namespace DPA_Musicsheets.ViewModels
                     {
                         action = ActionOption.SaveAsLilyPond;
                         filter = "Lilypond files (*.ly)|*.ly";
-                    } else if (keyCombo[3] == Key.P)
+                    }
+                    else if (keyCombo[3] == Key.P)
                     {
                         action = ActionOption.SaveAsPdf;
                         filter = "Pdf files (*.pdf)|.pdf";

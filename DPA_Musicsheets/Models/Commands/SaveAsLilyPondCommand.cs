@@ -4,7 +4,7 @@ namespace DPA_Musicsheets.Models.Commands
 {
     public class SaveAsLilyPondCommand : Command
     {
-        public SaveAsLilyPondCommand(Command next, MusicLoader musicLoader) : base(next, musicLoader)
+        public SaveAsLilyPondCommand(MusicLoader musicLoader) : base(musicLoader)
         {
             ActionOption = ActionOption.SaveAsLilyPond;
         }

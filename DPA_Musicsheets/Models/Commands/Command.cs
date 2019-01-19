@@ -12,9 +12,8 @@ namespace DPA_Musicsheets.Models.Commands
         public Command Next { get; set; }
         protected ActionOption ActionOption;
         protected readonly MusicLoader MusicLoader;
-        public Command(Command next, MusicLoader musicLoader)
+        public Command(MusicLoader musicLoader)
         {
-            Next = next;
             MusicLoader = musicLoader;
         }
     }

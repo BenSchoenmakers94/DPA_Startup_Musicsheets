@@ -106,7 +106,6 @@
     <Compile Include="Managers\MidiToLilyHelper.cs" />
     <Compile Include="Managers\MusicLoader.cs" />
     <Compile Include="Models\Commands\ActionOption.cs" />
-    <Compile Include="Models\Commands\AddBarLinesCommand.cs" />
     <Compile Include="Models\Commands\AddClefTrebleCommand.cs" />
     <Compile Include="Models\Commands\AddTempoCommand.cs" />
     <Compile Include="Models\Commands\AddTimeCommand.cs" />

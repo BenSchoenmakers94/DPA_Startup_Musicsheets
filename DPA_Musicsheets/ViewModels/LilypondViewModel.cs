@@ -118,7 +118,7 @@ namespace DPA_Musicsheets.ViewModels
         public ICommand SaveAsCommand => new RelayCommand(() =>
         {
             // TODO: In the application a lot of classes know which filetypes are supported. Lots and lots of repeated code here...
-            // TODO save file event?
+            // TODO save file event? -> the same as the main view model save?
             // Can this be done better?
             SaveFileDialog saveFileDialog = new SaveFileDialog() { Filter = "Midi|*.mid|Lilypond|*.ly|PDF|*.pdf" };
             if (saveFileDialog.ShowDialog() == true)

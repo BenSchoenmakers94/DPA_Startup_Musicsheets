@@ -7,7 +7,7 @@ namespace DPA_Musicsheets.Models.Commands
 {
     public class AddClefTrebleCommand : Command
     {
-        public AddClefTrebleCommand(Command next, MusicLoader musicLoader) : base(next, musicLoader)
+        public AddClefTrebleCommand(MusicLoader musicLoader) : base(musicLoader)
         {
             ActionOption = ActionOption.AddClefTreble;
         }

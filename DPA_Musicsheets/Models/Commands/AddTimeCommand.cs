@@ -5,7 +5,7 @@ namespace DPA_Musicsheets.Models.Commands
 {
     public class AddTimeCommand : Command
     {
-        public AddTimeCommand(Command next, MusicLoader musicLoader) : base(next, musicLoader)
+        public AddTimeCommand(MusicLoader musicLoader) : base(musicLoader)
         {
             ActionOption = ActionOption.AddTime;
         }

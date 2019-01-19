@@ -6,7 +6,7 @@ namespace DPA_Musicsheets.Models.Commands
 {
     public class OpenFileCommand : Command
     {
-        public OpenFileCommand(Command next, MusicLoader musicLoader) : base(next, musicLoader)
+        public OpenFileCommand(MusicLoader musicLoader) : base(musicLoader)
         {
             ActionOption = ActionOption.OpenFile;
         }

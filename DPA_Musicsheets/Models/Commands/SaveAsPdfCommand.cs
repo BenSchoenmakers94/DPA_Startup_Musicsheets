@@ -4,7 +4,7 @@ namespace DPA_Musicsheets.Models.Commands
 {
     public class SaveAsPdfCommand : Command
     {
-        public SaveAsPdfCommand(Command next, MusicLoader musicLoader) : base(next, musicLoader)
+        public SaveAsPdfCommand(MusicLoader musicLoader) : base(musicLoader)
         {
             ActionOption = ActionOption.SaveAsPdf;
         }
