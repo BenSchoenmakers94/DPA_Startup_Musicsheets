@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using DPA_Musicsheets.Models.Events;
 
 namespace DPA_Musicsheets.ViewModels
 {
@@ -19,6 +20,7 @@ namespace DPA_Musicsheets.ViewModels
         private string _text;
         private string _previousText;
         private string _nextText;
+        private int textCursorIndex;
 
         /// <summary>
         /// This text will be in the textbox.
@@ -26,10 +28,7 @@ namespace DPA_Musicsheets.ViewModels
         /// </summary>
         public string LilypondText
         {
-            get
-            {
-                return _text;
-            }
+            get => _text;
             set
             {
                 if (!_waitingForRender && !_textChangedByLoad)
@@ -53,8 +52,9 @@ namespace DPA_Musicsheets.ViewModels
             _mainViewModel = mainViewModel;
             _musicLoader = musicLoader;
             _musicLoader.LilypondViewModel = this;
-            
             _text = "Your lilypond text will appear here.";
+            textCursorIndex = 0;
+            OwnEventmanager.Manager.Subscribe("addLilyPondToken", AddSymbol);
         }
 
         public void LilypondTextLoaded(string text)
@@ -63,6 +63,8 @@ namespace DPA_Musicsheets.ViewModels
             LilypondText = _previousText = text;
             _textChangedByLoad = false;
         }
+
+        private void AddSymbol(string symbol) => LilypondText = LilypondText?.Insert(textCursorIndex, symbol);
 
         /// <summary>
         /// This occurs when the text in the textbox has changed. This can either be by loading or typing.
@@ -107,9 +109,16 @@ namespace DPA_Musicsheets.ViewModels
             RedoCommand.RaiseCanExecuteChanged();
         }, () => _nextText != null && _nextText != LilypondText);
 
+        public ICommand SelectionChangedCommand => new RelayCommand<RoutedEventArgs>(e =>
+        {
+            TextBox textBox = e.Source as TextBox;
+            textCursorIndex = textBox.CaretIndex;
+        });
+
         public ICommand SaveAsCommand => new RelayCommand(() =>
         {
             // TODO: In the application a lot of classes know which filetypes are supported. Lots and lots of repeated code here...
+            // TODO save file event? -> the same as the main view model save?
             // Can this be done better?
             SaveFileDialog saveFileDialog = new SaveFileDialog() { Filter = "Midi|*.mid|Lilypond|*.ly|PDF|*.pdf" };
             if (saveFileDialog.ShowDialog() == true)
