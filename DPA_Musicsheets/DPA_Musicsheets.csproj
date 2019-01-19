@@ -105,6 +105,14 @@
     </ApplicationDefinition>
     <Compile Include="Managers\MidiToLilyHelper.cs" />
     <Compile Include="Managers\MusicLoader.cs" />
+    <Compile Include="Models\Commands\AddBarLinesCommand.cs" />
+    <Compile Include="Models\Commands\AddClefTrebleCommand.cs" />
+    <Compile Include="Models\Commands\AddTempoCommand.cs" />
+    <Compile Include="Models\Commands\AddTimeCommand.cs" />
+    <Compile Include="Models\Commands\Command.cs" />
+    <Compile Include="Models\Commands\OpenFileCommand.cs" />
+    <Compile Include="Models\Commands\SaveAsLilyPondCommand.cs" />
+    <Compile Include="Models\Commands\SaveAsPdfCommand.cs" />
     <Compile Include="Models\Domain\Bar.cs" />
     <Compile Include="Models\Domain\Clef.cs" />
     <Compile Include="Models\Domain\Note.cs" />
