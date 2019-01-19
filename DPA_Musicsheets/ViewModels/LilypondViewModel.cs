@@ -109,7 +109,7 @@ namespace DPA_Musicsheets.ViewModels
             RedoCommand.RaiseCanExecuteChanged();
         }, () => _nextText != null && _nextText != LilypondText);
 
-        public ICommand PlacedCursorCommand => new RelayCommand<RoutedEventArgs>(e =>
+        public ICommand SelectionChangedCommand => new RelayCommand<RoutedEventArgs>(e =>
         {
             TextBox textBox = e.Source as TextBox;
             textCursorIndex = textBox.CaretIndex;
