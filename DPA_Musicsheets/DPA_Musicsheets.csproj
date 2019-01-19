@@ -103,6 +103,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Interpreters\GenericInterpreter.cs" />
+    <Compile Include="Interpreters\LilyPond\LilyPondInterpreter.cs" />
+    <Compile Include="Interpreters\Midi\MidiInterpreter.cs" />
+    <Compile Include="IO\GenericHandler.cs" />
+    <Compile Include="IO\LilyPond\LilyPondFileHandler.cs" />
+    <Compile Include="IO\Midi\MidiFileHandler.cs" />
     <Compile Include="Managers\MidiToLilyHelper.cs" />
     <Compile Include="Managers\MusicLoader.cs" />
     <Compile Include="Models\Commands\ActionOption.cs" />
@@ -117,6 +123,7 @@
     <Compile Include="Models\Domain\Bar.cs" />
     <Compile Include="Models\Domain\Clef.cs" />
     <Compile Include="Models\Domain\Note.cs" />
+    <Compile Include="Models\Domain\Staff.cs" />
     <Compile Include="Models\Domain\Symbol.cs" />
     <Compile Include="Models\Domain\Tempo.cs" />
     <Compile Include="Models\Events\Event.cs" />
@@ -252,7 +259,9 @@
     <Content Include="Files\Eenvoudige voorbeeldfiles\Rusten.ly" />
     <Content Include="Files\Eenvoudige voorbeeldfiles\Standaard_noten.ly" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Events\Macro\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

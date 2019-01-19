@@ -1,76 +1,49 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using DPA_Musicsheets.Models.Domain;
 
 namespace DPA_Musicsheets.IO
 {
     public abstract class GenericHandler
     {
-        public abstract List<string> Extensions { get; }
-        public abstract string FileType { get; }
-        public abstract string FileTypeString { get; }
-
-        public Staff LoadFile(string fileName)
+        public List<string> possibleExtensions { get; protected set; }
+        public string fileType { get; protected set; }
+        public Staff loadFile(string fileName)
         {
-            if (HandlesFile(fileName))
-            {
-                return Load(fileName);
-            }
-            if (Next != null)
-            {
-                return Next.LoadFile(fileName);
-            }
-            return null;
+            return canHandle(fileName) ? load(fileName) : null;
         }
 
-        public bool SaveFile(string fileName, Staff staff)
+        public bool saveFile(string fileName, Staff staff)
         {
-            if (HandlesFile(fileName))
-            {
-                return Save(fileName, staff);
-            }
-            if (Next != null)
-            {
-                return Next.SaveFile(fileName, staff);
-            }
-            return false;
+            return canHandle(fileName) && save(fileName, staff);
         }
 
-        protected abstract Staff Load(string filename);
-        protected abstract bool Save(string filename, Staff staff);
+        protected abstract Staff load(string filename);
+        protected abstract bool save(string filename, Staff staff);
 
-        public bool HandlesFile(string filename)
+        public bool canHandle(string filename)
         {
-            return Extensions.Contains(Path.GetExtension(filename));
+            return possibleExtensions.Contains(Path.GetExtension(filename));
         }
 
-        public static string BuildSupportedFileTypeString(string fileType, List<string> extensions)
+        protected string buildSupportedFileTypeString()
         {
-            var builder = new StringBuilder();
-            builder.Append($"{fileType} (");
-            foreach (var extension in extensions)
+            var sb = new StringBuilder();
+            sb.Append($"{fileType} (");
+            foreach (var extension in possibleExtensions)
             {
-                builder.Append($"*{extension} ");
+                sb.Append($"*{extension} ");
             }
-            builder.Append(")|");
-            foreach (var extension in extensions)
+
+            sb.Append(")|");
+            foreach (var extension in possibleExtensions)
             {
-                builder.Append($"*{extension}");
-                if (extension != extensions[extensions.Count - 1]) builder.Append(";");
+                sb.Append($"*{extension}");
+                if (extension != possibleExtensions[possibleExtensions.Count - 1]) sb.Append(";");
             }
-            return builder.ToString();
+
+            return sb.ToString();
         }
-
-        public List<string> GetSupportedFileTypeStrings()
-        {
-            var ext = new List<string> { FileTypeString };
-
-            if (Next != null)
-            {
-                ext.AddRange(Next.GetSupportedFileTypeStrings());
-            }
-            return ext;
-        }
-
     }
 }
