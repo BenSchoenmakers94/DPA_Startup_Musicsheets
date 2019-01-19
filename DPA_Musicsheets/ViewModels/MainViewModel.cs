@@ -108,8 +108,6 @@ namespace DPA_Musicsheets.ViewModels
            }
            if (!downKeyQueue.Any() && upKeyQueue.Count > 1)
            {
-               //TODO fix random reversal when using alt
-
                if (upKeyQueue[0] != Key.LeftAlt && upKeyQueue[0] != Key.RightAlt)
                {
                    upKeyQueue.Reverse();
