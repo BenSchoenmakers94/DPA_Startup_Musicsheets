@@ -1,28 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Input;
+using DPA_Musicsheets.Managers;
 
 namespace DPA_Musicsheets.Models.Commands
 {
     public class AddClefTrebleCommand : Command
     {
-        public AddClefTrebleCommand(Command next) : base(next)
+        public AddClefTrebleCommand(Command next, MusicLoader musicLoader) : base(next, musicLoader)
         {
+            ActionOption = ActionOption.AddClefTreble;
         }
-        public override void Execute(List<Key> pressedKeys)
+        public override void Execute(ActionOption actionOption, string parameter = null)
         {
-            if (CanExecute(pressedKeys))
+            //parameter will be empty
+            if (CanExecute(actionOption))
             {
                 //TODO add clef treble
             }
             else
             {
-                Next.Execute(pressedKeys);
+                Next.Execute(actionOption, parameter);
             }
-        }
-        public override bool CanExecute(List<Key> pressedKeys)
-        {
-            //TODO check if can execute
-            return false;
         }
     }
 }

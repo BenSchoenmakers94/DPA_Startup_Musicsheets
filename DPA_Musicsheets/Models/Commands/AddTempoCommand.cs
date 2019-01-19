@@ -1,28 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Windows.Input;
+﻿using DPA_Musicsheets.Managers;
 
 namespace DPA_Musicsheets.Models.Commands
 {
     public class AddTempoCommand : Command
     {
-        public AddTempoCommand(Command next) : base(next)
+        public AddTempoCommand(Command next, MusicLoader musicLoader) : base(next, musicLoader)
         {
+            ActionOption = ActionOption.AddTempo;
         }
-        public override void Execute(List<Key> pressedKeys)
+        public override void Execute(ActionOption actionOption, string parameter = null)
         {
-            if (CanExecute(pressedKeys))
+            // paramter will be empty
+            if (CanExecute(actionOption))
             {
                 //TODO add tempo (speed) 4=120
             }
             else
             {
-                Next.Execute(pressedKeys);
+                Next.Execute(actionOption, parameter);
             }
-        }
-        public override bool CanExecute(List<Key> pressedKeys)
-        {
-            //TODO check if can execute
-            return false;
         }
     }
 }

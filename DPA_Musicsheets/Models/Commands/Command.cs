@@ -1,14 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Input;
+using DPA_Musicsheets.Managers;
 
 namespace DPA_Musicsheets.Models.Commands
 {
-    public abstract class Command
+    public class Command
     {
-        public virtual void Execute(List<Key> pressedKeys) => Next.Execute(pressedKeys);
-        public virtual bool CanExecute(List<Key> pressedKeys) => false;
-        protected Command Next { get; set; }
-
-        protected Command(Command next) => Next = next;
+        public virtual void Execute(ActionOption actionOption, string parameter = null) {}
+        protected bool CanExecute(ActionOption actionOption) => actionOption == ActionOption;
+        public Command Next { get; set; }
+        protected ActionOption ActionOption;
+        protected readonly MusicLoader MusicLoader;
+        public Command(Command next, MusicLoader musicLoader)
+        {
+            Next = next;
+            MusicLoader = musicLoader;
+        }
     }
 }

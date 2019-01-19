@@ -1,29 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Input;
+using DPA_Musicsheets.Managers;
 
 namespace DPA_Musicsheets.Models.Commands
 {
     public class OpenFileCommand : Command
     {
-        public OpenFileCommand(Command next) : base(next)
+        public OpenFileCommand(Command next, MusicLoader musicLoader) : base(next, musicLoader)
         {
+            ActionOption = ActionOption.OpenFile;
         }
 
-        public override void Execute(List<Key> pressedKeys)
+        public override void Execute(ActionOption actionOption, string parameter = null)
         {
-            if (CanExecute(pressedKeys))
+            if (CanExecute(actionOption))
             {
-                //TODO save
+                //Parameter is the path to the file
+                MusicLoader.OpenFile(parameter);
             }
             else
             {
-                Next.Execute(pressedKeys);
+                Next.Execute(actionOption, parameter);
             }
-        }
-        public override bool CanExecute(List<Key> pressedKeys)
-        {
-            //TODO check if can execute
-            return false;
         }
     }
 }
