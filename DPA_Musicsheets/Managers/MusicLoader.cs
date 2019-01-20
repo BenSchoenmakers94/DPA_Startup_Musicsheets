@@ -12,6 +12,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using DPA_Musicsheets.Creation.LilyPond;
+using DPA_Musicsheets.Interpreters.LilyPond;
+using DPA_Musicsheets.IO.LilyPond;
 
 namespace DPA_Musicsheets.Managers
 {
@@ -48,32 +51,34 @@ namespace DPA_Musicsheets.Managers
         /// <param name="fileName"></param>
         public void OpenFile(string fileName)
         {
-            if (Path.GetExtension(fileName).EndsWith(".mid"))
-            {
-                MidiSequence = new Sequence();
-                MidiSequence.Load(fileName);
+            var mem = new LilyPondFileHandler(new LilyPondInterpreter(new LilyPondNoteFactory()));
+            var pol = mem.loadFile(fileName);
+            //if (Path.GetExtension(fileName).EndsWith(".mid"))
+            //{
+            //    MidiSequence = new Sequence();
+            //    MidiSequence.Load(fileName);
 
-                MidiPlayerViewModel.MidiSequence = MidiSequence;
-                this.LilypondText = LoadMidiIntoLilypond(MidiSequence);
-                this.LilypondViewModel.LilypondTextLoaded(this.LilypondText);
-            }
-            else if (Path.GetExtension(fileName).EndsWith(".ly"))
-            {
-                StringBuilder sb = new StringBuilder();
-                foreach (var line in File.ReadAllLines(fileName))
-                {
-                    sb.AppendLine(line);
-                }
-                
-                this.LilypondText = sb.ToString();
-                this.LilypondViewModel.LilypondTextLoaded(this.LilypondText);
-            }
-            else
-            {
-                throw new NotSupportedException($"File extension {Path.GetExtension(fileName)} is not supported.");
-            }
+            //    MidiPlayerViewModel.MidiSequence = MidiSequence;
+            //    this.LilypondText = LoadMidiIntoLilypond(MidiSequence);
+            //    this.LilypondViewModel.LilypondTextLoaded(this.LilypondText);
+            //}
+            //else if (Path.GetExtension(fileName).EndsWith(".ly"))
+            //{
+            //    StringBuilder sb = new StringBuilder();
+            //    foreach (var line in File.ReadAllLines(fileName))
+            //    {
+            //        sb.AppendLine(line);
+            //    }
 
-            LoadLilypondIntoWpfStaffsAndMidi(LilypondText);
+            //    this.LilypondText = sb.ToString();
+            //    this.LilypondViewModel.LilypondTextLoaded(this.LilypondText);
+            //}
+            //else
+            //{
+            //    throw new NotSupportedException($"File extension {Path.GetExtension(fileName)} is not supported.");
+            //}
+
+            //LoadLilypondIntoWpfStaffsAndMidi(LilypondText);
         }
 
         /// <summary>
