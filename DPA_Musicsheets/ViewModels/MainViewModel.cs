@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using DPA_Musicsheets.IO;
 using DPA_Musicsheets.Models.Commands;
 using DPA_Musicsheets.Models.Events;
 
@@ -19,6 +20,7 @@ namespace DPA_Musicsheets.ViewModels
         private string _fileName;
         private readonly Command firstCommand;
         private readonly ShortcutHandler shortcutHandler;
+        private readonly FileChoiceHandler fileChoiceHandler;
         public string FileName
         {
             get => _fileName;
@@ -53,6 +55,7 @@ namespace DPA_Musicsheets.ViewModels
             shortcutHandler = new ShortcutHandler();
             firstCommand = cb.BuildCommands(musicLoader);
             OwnEventmanager.Manager.Subscribe("changeInformativeText", ChangeInformativeMessage);
+            fileChoiceHandler = new FileChoiceHandler();
         }
 
         private void ChangeInformativeMessage(string message)
@@ -62,7 +65,6 @@ namespace DPA_Musicsheets.ViewModels
 
         public ICommand OpenFileCommand => new RelayCommand(() =>
         {
-            //TODO fix "Midi or LilyPond files (*.mid *.ly)|*.mid;*.ly"
             FileName = OpenOpenFileDialog();
         });
 
@@ -141,17 +143,13 @@ namespace DPA_Musicsheets.ViewModels
 
         private string OpenOpenFileDialog()
         {
-            //TODO central place to store available types
-            string filter = "";
-            OpenFileDialog openFileDialog = new OpenFileDialog { Filter = filter };
+            OpenFileDialog openFileDialog = new OpenFileDialog { Filter = fileChoiceHandler.GetSupportedLoadTypes()};
             return openFileDialog.ShowDialog() == true ? openFileDialog.FileName : null;
         }
 
         private string OpenSaveFileDialog()
         {
-            //TODO central place to store available types
-            string filter = "";
-            SaveFileDialog saveFileDialog = new SaveFileDialog { Filter = filter };
+            SaveFileDialog saveFileDialog = new SaveFileDialog { Filter = fileChoiceHandler.GetSupportedSaveTypes() };
             return saveFileDialog.ShowDialog() == true ? saveFileDialog.FileName : null;
         }
 

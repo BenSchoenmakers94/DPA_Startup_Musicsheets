@@ -111,9 +111,11 @@
     <Compile Include="Interpreters\GenericInterpreter.cs" />
     <Compile Include="Interpreters\LilyPond\LilyPondInterpreter.cs" />
     <Compile Include="Interpreters\Midi\MidiInterpreter.cs" />
+    <Compile Include="IO\FileChoiceHandler.cs" />
     <Compile Include="IO\GenericHandler.cs" />
     <Compile Include="IO\LilyPond\LilyPondFileHandler.cs" />
     <Compile Include="IO\Midi\MidiFileHandler.cs" />
+    <Compile Include="IO\Pdf\PdfFileHandler.cs" />
     <Compile Include="Managers\MidiToLilyHelper.cs" />
     <Compile Include="Managers\MusicLoader.cs" />
     <Compile Include="Models\Commands\ActionOption.cs" />
@@ -268,9 +270,7 @@
     <Content Include="Files\Eenvoudige voorbeeldfiles\Rusten.ly" />
     <Content Include="Files\Eenvoudige voorbeeldfiles\Standaard_noten.ly" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Events\Macro\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

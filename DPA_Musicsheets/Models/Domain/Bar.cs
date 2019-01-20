@@ -17,6 +17,7 @@ namespace DPA_Musicsheets.Models.Domain
         public Bar(RepeatType repeatType)
         {
             this.type = repeatType;
+            notes = new List<Symbol>();
         }
 
         public override void Accept(IVisitor visitor)

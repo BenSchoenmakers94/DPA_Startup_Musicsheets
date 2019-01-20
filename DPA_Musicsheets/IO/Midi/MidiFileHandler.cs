@@ -15,6 +15,8 @@ namespace DPA_Musicsheets.IO.Midi
             this.interpreter = interpreter;
             this.fileType = "Midi";
             this.possibleExtensions = new List<string> { ".midi", ".mid" };
+            CanSave = true;
+            CanLoad = true;
         }
 
         public string getSupportedFileTypeString()
@@ -43,6 +45,11 @@ namespace DPA_Musicsheets.IO.Midi
                 return false;
             }
             return true;
+        }
+
+        public override void saveToFile(string fileLocation, string text)
+        {
+            throw new NotImplementedException();
         }
     }
 }

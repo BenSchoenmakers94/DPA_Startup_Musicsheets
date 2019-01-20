@@ -34,7 +34,7 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
                 {
                     foreach (var note in bar.notes)
                     {
-                       note.Accept(this);
+                        note.Accept(this);
                     }
                     bar.Accept(this);
                 }
@@ -46,6 +46,7 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
         {
             var score = new Score();
             score.addStaff(new Staff());
+            score.staffsInScore.First().addBar(new Bar(RepeatType.NoRepeat));
 
             var tokens = getTokensFromLilypond(transformable);
 
@@ -60,7 +61,7 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
                         break;
                     case LilypondTokenKind.Tempo:
                         var tempoSections = current.NextToken.Value.Split('=');
-                        Length lengthOfBeat = (Length) Int32.Parse(tempoSections.First());
+                        Length lengthOfBeat = (Length)Int32.Parse(tempoSections.First());
                         var rangeMeasures = tempoSections.Last().Split('-');
                         if (rangeMeasures.Length > 1)
                         {
@@ -74,7 +75,7 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
                         }
                         break;
                     case LilypondTokenKind.Time:
-                        var timeSignatureSections = current.NextToken.Value.Split('=');
+                        var timeSignatureSections = current.NextToken.Value.Split('/');
                         score.staffsInScore.Last().timeSignature = new TimeSignature(Int32.Parse(timeSignatureSections.First()), (Length)Int32.Parse(timeSignatureSections.Last()));
                         break;
                     case LilypondTokenKind.Bar:
@@ -99,6 +100,10 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
                                 break;
                         }
                         score.staffsInScore.Last().clef = newClef;
+                        break;
+                    case LilypondTokenKind.Rest:
+                        Rest rest = new Rest();
+
                         break;
                 }
                 current = current.NextToken;
@@ -193,6 +198,11 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
         public void Visit(TimeSignature timeSignature)
         {
             stringBuilder_.AppendLine($"\\time {timeSignature.beatsPerMeasure}/{timeSignature.lengthOfOneBeat} ");
+        }
+
+        public void Visit(TimeSignature timeSignature)
+        {
+            throw new NotImplementedException();
         }
     }
 }
