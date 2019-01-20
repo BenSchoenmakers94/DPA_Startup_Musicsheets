@@ -3,9 +3,9 @@ using DPA_Musicsheets.Models.Domain;
 
 namespace DPA_Musicsheets.Creation.Midi
 {
-    public class MidiSymbolFactory : AbstractSymbolFactory<int>
+    public class MidiNoteFactory : AbstractNoteFactory<int>
     {
-        public override Symbol create(int noteSpecifier)
+        public override Note create(int noteSpecifier)
         {
             var tone = getTone(noteSpecifier);
             var intonation = getIntonation(noteSpecifier);

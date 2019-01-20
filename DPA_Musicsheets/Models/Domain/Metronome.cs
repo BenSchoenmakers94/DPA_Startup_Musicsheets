@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using DPA_Musicsheets.Models.Visitor;
 
 namespace DPA_Musicsheets.Models.Domain
 {
-    public class Metronome
+    public class Metronome : Symbol
     {
         public Metronome(Length tempoIndication, int beatsPerMinute)
         {
@@ -28,5 +29,9 @@ namespace DPA_Musicsheets.Models.Domain
         public Length tempoIndication { get; private set; }
         private int beatsPerMinute { get; set; }
         private Tuple<int, int> beatsPerMinuteInRange { get; set; }
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 }

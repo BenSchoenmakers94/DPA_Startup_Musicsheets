@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DPA_Musicsheets.Models.Visitor;
 
 namespace DPA_Musicsheets.Models.Domain
 {
@@ -11,11 +12,16 @@ namespace DPA_Musicsheets.Models.Domain
     public class Bar : Symbol
     {
         public RepeatType type { get; private set; }
-        public List<Note> notes { get; set; }
+        public List<Symbol> notes { get; set; }
 
         public Bar(RepeatType repeatType)
         {
             this.type = repeatType;
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
         }
     }
 }

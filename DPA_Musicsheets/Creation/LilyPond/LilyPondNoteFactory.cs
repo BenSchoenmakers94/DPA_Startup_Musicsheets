@@ -5,9 +5,9 @@ using DPA_Musicsheets.Models.Domain;
 
 namespace DPA_Musicsheets.Creation.LilyPond
 {
-    public class LilyPondSymbolFactory : AbstractSymbolFactory<string>
+    public class LilyPondNoteFactory : AbstractNoteFactory<string>
     {
-        public override Symbol create(string noteSpecifier)
+        public override Note create(string noteSpecifier)
         {
             bool connected = noteSpecifier.StartsWith("~") || noteSpecifier.EndsWith("~");
             int higherPitch =  noteSpecifier.Count(f => f == '\'');

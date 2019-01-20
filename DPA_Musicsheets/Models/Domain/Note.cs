@@ -1,4 +1,5 @@
 ﻿using System;
+using DPA_Musicsheets.Models.Visitor;
 
 namespace DPA_Musicsheets.Models.Domain
 {
@@ -50,5 +51,9 @@ namespace DPA_Musicsheets.Models.Domain
         public Intonation intonation { get; private set; }
 
 
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 }
