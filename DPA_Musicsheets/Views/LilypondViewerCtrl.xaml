@@ -21,7 +21,7 @@
         </StackPanel>
         <TextBox TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" 
             VerticalAlignment="Stretch" Text="{Binding LilypondText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="5"
-            Grid.Row="1" Grid.Column="1">
+            Grid.Row="1" Grid.Column="1" IsEnabled="{Binding CanEdit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged" >
                     <command:EventToCommand Command="{Binding SelectionChangedCommand}" PassEventArgsToCommand="True"  />
@@ -30,6 +30,15 @@
                     <command:EventToCommand Command="{Binding TextChangedCommand}" PassEventArgsToCommand="True"  />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
+            <TextBox.Style>
+                <Style TargetType="{x:Type TextBox}">
+                    <Style.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{StaticResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
         </TextBox>
     </Grid>
 </UserControl>

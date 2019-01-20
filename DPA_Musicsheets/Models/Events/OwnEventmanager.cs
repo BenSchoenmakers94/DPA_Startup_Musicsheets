@@ -12,7 +12,10 @@ namespace DPA_Musicsheets.Models.Events
         {
             events = new Dictionary<string, Event<string>>
             {
-                {"addLilyPondToken", new Event<string>() }  
+                {"addLilyPondToken", new Event<string>() }  ,
+                {"changeInformativeText", new Event<string>() },
+                {"changeEditorState", new Event<string>() },
+                {"changePlayerState", new Event<string>() }
             };
         }
 
