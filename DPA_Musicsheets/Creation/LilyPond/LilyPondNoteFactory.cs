@@ -9,7 +9,7 @@ namespace DPA_Musicsheets.Creation.LilyPond
     {
         public override Note create(string noteSpecifier)
         {
-            bool connected = noteSpecifier.StartsWith("~") || noteSpecifier.EndsWith("~");
+            bool connected = noteSpecifier.Contains("~");
             int higherPitch =  noteSpecifier.Count(f => f == '\'');
             int lowerPitch = noteSpecifier.Count(f => f == ',');
             var totalPitch = 4 + higherPitch + lowerPitch;

@@ -24,13 +24,6 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
         {
             stringBuilder_ = new StringBuilder();
             stringBuilder_.AppendLine("\\relative c' { ");
-            stringBuilder_.AppendLine($"\\clef {song.staffsInScore.FirstOrDefault()?.clef.getClefName()} ");
-            stringBuilder_.AppendLine($"\\time {song.staffsInScore.FirstOrDefault()?.timeSignature.beatsPerMeasure}/{song.staffsInScore.FirstOrDefault()?.timeSignature.lengthOfOneBeat} ");
-            var list = song.staffsInScore.FirstOrDefault()?.metronome.getBeatsPerMinute();
-            stringBuilder_.AppendLine(list?.Count > 1
-                ? $"\\tempo {song.staffsInScore.FirstOrDefault()?.metronome.tempoIndication}={list?[0]}-{list?[1]} "
-                : $"\\tempo {song.staffsInScore.FirstOrDefault()?.metronome.tempoIndication}={list?[0]} ");
-
 
             foreach (var staff in song.staffsInScore)
             {
@@ -89,7 +82,7 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
                         break;
                     case LilypondTokenKind.Clef:
                         var clefString = current.NextToken.Value;
-                        Clef newClef = null;
+                        Clef newClef;
                         switch (clefString)
                         {
                             case "treble":
@@ -140,7 +133,7 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
 
                 switch (token.TokenKind)
                 {
-                    case LilypondTokenKind.Unknown when new Regex(@"[~]?[a-g][,'eis]*[0-9]+[.]*", RegexOptions.IgnoreCase).IsMatch(token.Value):
+                    case LilypondTokenKind.Unknown when new Regex(@"[a-g][,'eis]*[0-9]+[~]?[.]*", RegexOptions.IgnoreCase).IsMatch(token.Value):
                         token.TokenKind = LilypondTokenKind.Note;
                         break;
                     case LilypondTokenKind.Unknown when new Regex(@"r.*?[0-9][.]*").IsMatch(substring):
@@ -162,7 +155,8 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
 
         public void Visit(Rest rest)
         {
-            throw new NotImplementedException();
+            stringBuilder_.Append("r");
+            stringBuilder_.Append(rest.length + " ");
         }
 
         public void Visit(Note note)
@@ -174,6 +168,7 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
             if (note.intonation == Intonation.Sharp) stringBuilder_.Append('\'');
             stringBuilder_.Append(note.length);
             if (note.dot) stringBuilder_.Append('.');
+            if (note.connected) stringBuilder_.Append("~");
             stringBuilder_.Append(" ");
         }
 
@@ -184,12 +179,20 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
 
         public void Visit(Clef clef)
         {
-            throw new NotImplementedException();
+            stringBuilder_.AppendLine($"\\clef {clef.getClefName()} ");
         }
 
         public void Visit(Metronome metronome)
         {
-            throw new NotImplementedException();
+            var list = metronome.getBeatsPerMinute();
+            stringBuilder_.AppendLine(list?.Count > 1
+                ? $"\\tempo {metronome.tempoIndication}={list?[0]}-{list?[1]} "
+                : $"\\tempo {metronome.tempoIndication}={list?[0]} ");
+        }
+
+        public void Visit(TimeSignature timeSignature)
+        {
+            stringBuilder_.AppendLine($"\\time {timeSignature.beatsPerMeasure}/{timeSignature.lengthOfOneBeat} ");
         }
     }
 }

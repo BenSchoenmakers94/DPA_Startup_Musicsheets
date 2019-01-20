@@ -7,7 +7,9 @@ namespace DPA_Musicsheets.Interpreters.Midi
     {
         public override Sequence Convert(Score song)
         {
-            throw new System.NotImplementedException();
+            var newSequence = new Sequence();
+            return newSequence;
+
         }
 
         public override Score ConvertBack(Sequence transformable)
