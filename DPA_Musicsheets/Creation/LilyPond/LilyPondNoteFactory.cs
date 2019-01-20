@@ -5,11 +5,11 @@ using DPA_Musicsheets.Models.Domain;
 
 namespace DPA_Musicsheets.Creation.LilyPond
 {
-    public class LilyPondSymbolFactory : AbstractSymbolFactory<string>
+    public class LilyPondNoteFactory : AbstractNoteFactory<string>
     {
-        public override Symbol create(string noteSpecifier)
+        public override Note create(string noteSpecifier)
         {
-            bool connected = noteSpecifier.StartsWith("~") || noteSpecifier.EndsWith("~");
+            bool connected = noteSpecifier.Contains("~");
             int higherPitch =  noteSpecifier.Count(f => f == '\'');
             int lowerPitch = noteSpecifier.Count(f => f == ',');
             var totalPitch = 4 + higherPitch + lowerPitch;

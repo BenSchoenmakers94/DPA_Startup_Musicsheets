@@ -1,4 +1,6 @@
-﻿namespace DPA_Musicsheets.Models.Domain
+﻿using DPA_Musicsheets.Models.Visitor;
+
+namespace DPA_Musicsheets.Models.Domain
 {
 
     public enum ClefType
@@ -14,6 +16,26 @@
         public Clef(ClefType clefType)
         {
             type = clefType;
+        }
+
+        public string getClefName()
+        {
+            switch (type)
+            {
+                case ClefType.G:
+                    return "treble";
+                case ClefType.C:
+                    return "alto";
+                case ClefType.F:
+                    return "bass";
+                default:
+                    return "treble";
+            }
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
         }
     }
 }

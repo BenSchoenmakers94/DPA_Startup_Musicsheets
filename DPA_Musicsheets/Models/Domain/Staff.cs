@@ -5,15 +5,12 @@ namespace DPA_Musicsheets.Models.Domain
 {
     public class Staff
     {
-        public Staff(TimeSignature timeSignature, Metronome metronome, Clef clef)
+        public Staff()
         {
-            this.timeSignature = timeSignature;
-            this.metronome = metronome;
-            this.clef = clef;
             bars = new List<Bar>();
         }
 
-        public List<Bar> bars { get; private set; }
+        public List<Bar> bars { get; set; }
         public TimeSignature timeSignature { get; set; }
         public Metronome metronome { get; set; }
         public Clef clef { get; set; }
