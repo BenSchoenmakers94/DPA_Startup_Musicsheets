@@ -173,7 +173,7 @@ namespace DPA_Musicsheets.ViewModels
 
         public ICommand OnWindowClosingCommand => new RelayCommand(() =>
         {
-            //TODO check if there are unsaved changes and if so, prompt user
+            OwnEventmanager.Manager.DispatchEvent("onClose", "");
             ViewModelLocator.Cleanup();
         });
         #endregion Focus and key commands, these can be used for implementing hotkeys
