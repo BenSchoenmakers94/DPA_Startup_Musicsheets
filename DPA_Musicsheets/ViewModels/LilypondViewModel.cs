@@ -3,12 +3,15 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using DPA_Musicsheets.Models.Events;
+using DPA_Musicsheets.ViewModels.Editor.Memento;
 
 namespace DPA_Musicsheets.ViewModels
 {
@@ -18,9 +21,10 @@ namespace DPA_Musicsheets.ViewModels
         private MainViewModel _mainViewModel { get; set; }
 
         private string _text;
-        private string _previousText;
-        private string _nextText;
         private int textCursorIndex;
+        private Stack<Memento> undoStack;
+        private Stack<Memento> redoStack;
+        private Originator originator;
 
         /// <summary>
         /// This text will be in the textbox.
@@ -31,9 +35,11 @@ namespace DPA_Musicsheets.ViewModels
             get => _text;
             set
             {
+                originator.State = _text;
                 if (!_waitingForRender && !_textChangedByLoad)
                 {
-                    _previousText = _text;
+                    redoStack.Clear();
+                    undoStack.Push(originator.Save());
                 }
                 _text = value;
                 RaisePropertyChanged(() => LilypondText);
@@ -55,12 +61,17 @@ namespace DPA_Musicsheets.ViewModels
             _text = "Your lilypond text will appear here.";
             textCursorIndex = 0;
             OwnEventmanager.Manager.Subscribe("addLilyPondToken", AddSymbol);
+            undoStack = new Stack<Memento>();
+            redoStack = new Stack<Memento>();
+            originator = new Originator();
         }
 
         public void LilypondTextLoaded(string text)
         {
             _textChangedByLoad = true;
-            LilypondText = _previousText = text;
+            undoStack.Clear();
+            redoStack.Clear();
+            LilypondText = text;
             _textChangedByLoad = false;
         }
 
@@ -96,18 +107,23 @@ namespace DPA_Musicsheets.ViewModels
         #region Commands for buttons like Undo, Redo and SaveAs
         public RelayCommand UndoCommand => new RelayCommand(() =>
         {
-            _nextText = LilypondText;
-            LilypondText = _previousText;
-            _previousText = null;
-        }, () => _previousText != null && _previousText != LilypondText);
+            originator.State = LilypondText;
+            redoStack.Push(originator.Save());
+            var memento = undoStack.Pop();
+            originator.Restore(memento);
+            _text = originator.State;
+            RaisePropertyChanged(() => LilypondText);
+        }, () => undoStack.Any());
 
         public RelayCommand RedoCommand => new RelayCommand(() =>
         {
-            _previousText = LilypondText;
-            LilypondText = _nextText;
-            _nextText = null;
-            RedoCommand.RaiseCanExecuteChanged();
-        }, () => _nextText != null && _nextText != LilypondText);
+            originator.State = LilypondText;
+            undoStack.Push(originator.Save());
+            var memento = redoStack.Pop();
+            originator.Restore(memento);
+            _text = originator.State;
+            RaisePropertyChanged(() => LilypondText);
+        }, () => redoStack.Any());
 
         public ICommand SelectionChangedCommand => new RelayCommand<RoutedEventArgs>(e =>
         {
