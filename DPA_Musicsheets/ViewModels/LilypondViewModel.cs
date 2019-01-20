@@ -20,7 +20,9 @@ namespace DPA_Musicsheets.ViewModels
         private int textCursorIndex;
         private readonly Stack<Memento> undoStack;
         private readonly Stack<Memento> redoStack;
-        private readonly Originator originator;
+        private Memento saved;
+        private readonly Originator stackOriginator;
+        private readonly Originator saveOriginator;
         private EditorState current;
         private readonly Dictionary<string, EditorState> states;
 
@@ -33,11 +35,11 @@ namespace DPA_Musicsheets.ViewModels
             get => _text;
             set
             {
-                originator.State = _text;
+                stackOriginator.State = _text;
                 if (!_textChangedByLoad)
                 {
                     redoStack.Clear();
-                    undoStack.Push(originator.Save());
+                    undoStack.Push(stackOriginator.Save());
                 }
                 _text = value;
                 RaisePropertyChanged(() => LilypondText);
@@ -69,7 +71,9 @@ namespace DPA_Musicsheets.ViewModels
             OwnEventmanager.Manager.Subscribe("addLilyPondToken", AddSymbol);
             undoStack = new Stack<Memento>();
             redoStack = new Stack<Memento>();
-            originator = new Originator();
+            stackOriginator = new Originator();
+            saveOriginator = new Originator();
+            saved = saveOriginator.Save();
 
             states = new Dictionary<string, EditorState>()
             {
@@ -80,6 +84,7 @@ namespace DPA_Musicsheets.ViewModels
 
             ChangeState("Idle");
             OwnEventmanager.Manager.Subscribe("changeEditorState", ChangeState);
+            OwnEventmanager.Manager.Subscribe("onClose", OnClose);
         }
 
         public void LilypondTextLoaded(string text)
@@ -88,6 +93,8 @@ namespace DPA_Musicsheets.ViewModels
             undoStack.Clear();
             redoStack.Clear();
             LilypondText = text;
+            saveOriginator.State = text;
+            saved = saveOriginator.Save();
             _textChangedByLoad = false;
         }
 
@@ -95,6 +102,18 @@ namespace DPA_Musicsheets.ViewModels
         {
             current = states[newState];
             current.GoInto(this);
+        }
+
+        private void OnClose(string param)
+        {
+            if (saved.State != LilypondText)
+            {
+                if (MessageBox.Show("There are unsaved changes. Do you want to save these changes?", "Question",
+                        MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    Save();
+                }
+            }
         }
 
         private void AddSymbol(string symbol) => LilypondText = LilypondText?.Insert(textCursorIndex, symbol);
@@ -115,21 +134,21 @@ namespace DPA_Musicsheets.ViewModels
         #region Commands for buttons like Undo, Redo and SaveAs
         public RelayCommand UndoCommand => new RelayCommand(() =>
         {
-            originator.State = LilypondText;
-            redoStack.Push(originator.Save());
+            stackOriginator.State = LilypondText;
+            redoStack.Push(stackOriginator.Save());
             var memento = undoStack.Pop();
-            originator.Restore(memento);
-            _text = originator.State;
+            stackOriginator.Restore(memento);
+            _text = stackOriginator.State;
             RaisePropertyChanged(() => LilypondText);
         }, () => undoStack.Any());
 
         public RelayCommand RedoCommand => new RelayCommand(() =>
         {
-            originator.State = LilypondText;
-            undoStack.Push(originator.Save());
+            stackOriginator.State = LilypondText;
+            undoStack.Push(stackOriginator.Save());
             var memento = redoStack.Pop();
-            originator.Restore(memento);
-            _text = originator.State;
+            stackOriginator.Restore(memento);
+            _text = stackOriginator.State;
             RaisePropertyChanged(() => LilypondText);
         }, () => redoStack.Any());
 
@@ -139,33 +158,44 @@ namespace DPA_Musicsheets.ViewModels
             textCursorIndex = textBox.CaretIndex;
         });
 
-        public ICommand SaveAsCommand => new RelayCommand(() =>
+        public ICommand SaveAsCommand => new RelayCommand(Save);
+
+        private void Save()
         {
             // TODO: In the application a lot of classes know which filetypes are supported. Lots and lots of repeated code here...
             // TODO save file event? -> the same as the main view model save?
             // Can this be done better?
-            SaveFileDialog saveFileDialog = new SaveFileDialog() { Filter = "Midi|*.mid|Lilypond|*.ly|PDF|*.pdf" };
+            SaveFileDialog saveFileDialog = new SaveFileDialog { Filter = "Midi|*.mid|Lilypond|*.ly|PDF|*.pdf" };
+            bool success = false;
             if (saveFileDialog.ShowDialog() == true)
             {
                 string extension = Path.GetExtension(saveFileDialog.FileName);
                 if (extension.EndsWith(".mid"))
                 {
                     MusicLoader.SaveToMidi(saveFileDialog.FileName);
+                    success = true;
                 }
                 else if (extension.EndsWith(".ly"))
                 {
                     MusicLoader.SaveToLilypond(saveFileDialog.FileName);
+                    success = true;
                 }
                 else if (extension.EndsWith(".pdf"))
                 {
                     MusicLoader.SaveToPDF(saveFileDialog.FileName);
+                    success = true;
                 }
                 else
                 {
                     MessageBox.Show($"Extension {extension} is not supported.");
                 }
             }
-        });
+            if (success)
+            {
+                saveOriginator.State = LilypondText;
+                saved = saveOriginator.Save();
+            }
+        }
         #endregion Commands for buttons like Undo, Redo and SaveAs
     }
 }
