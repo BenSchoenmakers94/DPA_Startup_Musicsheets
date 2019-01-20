@@ -1,0 +1,31 @@
+﻿using System;
+using System.Threading.Tasks;
+using DPA_Musicsheets.Models.Events;
+
+namespace DPA_Musicsheets.ViewModels.States.Editor
+{
+    public class RenderingState : IEditorState
+    {
+        private DateTime lastChange;
+        private static int MILLISECONDS_BEFORE_CHANGE_HANDLED = 1500;
+        public RenderingState()
+        {
+            showText = "Rendering...";
+        }
+        public override void GoInto(LilypondViewModel owner)
+        {
+            lastChange = DateTime.Now;
+            OwnEventmanager.Manager.DispatchEvent("changeInformativeText", showText);
+            Task.Delay(MILLISECONDS_BEFORE_CHANGE_HANDLED).ContinueWith((task) =>
+            {
+                if ((DateTime.Now - lastChange).TotalMilliseconds >= MILLISECONDS_BEFORE_CHANGE_HANDLED)
+                {
+                    owner.UndoCommand.RaiseCanExecuteChanged();
+
+                    owner.MusicLoader.LoadLilypondIntoWpfStaffsAndMidi(owner.LilypondText);
+                    OwnEventmanager.Manager.DispatchEvent("changePlaying", "Idle");
+                }
+            }, TaskScheduler.FromCurrentSynchronizationContext()); // Request from main thread.
+        }
+    }
+}

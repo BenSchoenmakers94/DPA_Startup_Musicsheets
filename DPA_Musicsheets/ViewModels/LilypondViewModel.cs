@@ -2,29 +2,27 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using Microsoft.Win32;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using DPA_Musicsheets.Models.Events;
 using DPA_Musicsheets.ViewModels.Editor.Memento;
+using DPA_Musicsheets.ViewModels.States.Editor;
 
 namespace DPA_Musicsheets.ViewModels
 {
     public class LilypondViewModel : ViewModelBase
     {
-        private MusicLoader _musicLoader;
-        private MainViewModel _mainViewModel { get; set; }
-
         private string _text;
         private int textCursorIndex;
-        private Stack<Memento> undoStack;
-        private Stack<Memento> redoStack;
-        private Originator originator;
+        private readonly Stack<Memento> undoStack;
+        private readonly Stack<Memento> redoStack;
+        private readonly Originator originator;
+        private IEditorState current;
+        private readonly Dictionary<string, IEditorState> states;
 
         /// <summary>
         /// This text will be in the textbox.
@@ -36,7 +34,7 @@ namespace DPA_Musicsheets.ViewModels
             set
             {
                 originator.State = _text;
-                if (!_waitingForRender && !_textChangedByLoad)
+                if (!_textChangedByLoad)
                 {
                     redoStack.Clear();
                     undoStack.Push(originator.Save());
@@ -46,24 +44,43 @@ namespace DPA_Musicsheets.ViewModels
             }
         }
 
-        private bool _textChangedByLoad = false;
-        private DateTime _lastChange;
-        private static int MILLISECONDS_BEFORE_CHANGE_HANDLED = 1500;
-        private bool _waitingForRender = false;
+        private bool canEdit;
+        public bool CanEdit
+        {
+            get => canEdit;
+            set
+            {
+                canEdit = value;
+                RaisePropertyChanged(() => CanEdit);
+            }
+        }
+        public MusicLoader MusicLoader { get; set; }
+
+        private bool _textChangedByLoad;
 
         public LilypondViewModel(MainViewModel mainViewModel, MusicLoader musicLoader)
         {
             // TODO: Can we use some sort of eventing system so the managers layer doesn't have to know the viewmodel layer and viewmodels don't know each other?
             // And viewmodels don't 
-            _mainViewModel = mainViewModel;
-            _musicLoader = musicLoader;
-            _musicLoader.LilypondViewModel = this;
+            MusicLoader = musicLoader;
+            MusicLoader.LilypondViewModel = this;
             _text = "Your lilypond text will appear here.";
             textCursorIndex = 0;
             OwnEventmanager.Manager.Subscribe("addLilyPondToken", AddSymbol);
             undoStack = new Stack<Memento>();
             redoStack = new Stack<Memento>();
             originator = new Originator();
+
+            states = new Dictionary<string, IEditorState>()
+            {
+                {"Idle", new IdleState() },
+                {"Rendering", new RenderingState() },
+                {"Playing", new BlockedState() }
+            };
+
+            current = states["Idle"];
+            current.GoInto(this);
+            OwnEventmanager.Manager.Subscribe("changePlaying", changeState);
         }
 
         public void LilypondTextLoaded(string text)
@@ -75,33 +92,25 @@ namespace DPA_Musicsheets.ViewModels
             _textChangedByLoad = false;
         }
 
+        private void changeState(string newState)
+        {
+            current = states[newState];
+            current.GoInto(this);
+        }
+
         private void AddSymbol(string symbol) => LilypondText = LilypondText?.Insert(textCursorIndex, symbol);
 
         /// <summary>
         /// This occurs when the text in the textbox has changed. This can either be by loading or typing.
         /// </summary>
-        public ICommand TextChangedCommand => new RelayCommand<TextChangedEventArgs>((args) =>
+        public ICommand TextChangedCommand => new RelayCommand<TextChangedEventArgs>(args =>
         {
-            // If we were typing, we need to do things.
-            if (!_textChangedByLoad)
+            if (_textChangedByLoad)
             {
-                _waitingForRender = true;
-                _lastChange = DateTime.Now;
-
-                _mainViewModel.CurrentState = "Rendering...";
-
-                Task.Delay(MILLISECONDS_BEFORE_CHANGE_HANDLED).ContinueWith((task) =>
-                {
-                    if ((DateTime.Now - _lastChange).TotalMilliseconds >= MILLISECONDS_BEFORE_CHANGE_HANDLED)
-                    {
-                        _waitingForRender = false;
-                        UndoCommand.RaiseCanExecuteChanged();
-
-                        _musicLoader.LoadLilypondIntoWpfStaffsAndMidi(LilypondText);
-                        _mainViewModel.CurrentState = "";
-                    }
-                }, TaskScheduler.FromCurrentSynchronizationContext()); // Request from main thread.
+                return;
             }
+            current = new RenderingState();
+            current.GoInto(this);
         });
 
         #region Commands for buttons like Undo, Redo and SaveAs
@@ -142,15 +151,15 @@ namespace DPA_Musicsheets.ViewModels
                 string extension = Path.GetExtension(saveFileDialog.FileName);
                 if (extension.EndsWith(".mid"))
                 {
-                    _musicLoader.SaveToMidi(saveFileDialog.FileName);
+                    MusicLoader.SaveToMidi(saveFileDialog.FileName);
                 }
                 else if (extension.EndsWith(".ly"))
                 {
-                    _musicLoader.SaveToLilypond(saveFileDialog.FileName);
+                    MusicLoader.SaveToLilypond(saveFileDialog.FileName);
                 }
                 else if (extension.EndsWith(".pdf"))
                 {
-                    _musicLoader.SaveToPDF(saveFileDialog.FileName);
+                    MusicLoader.SaveToPDF(saveFileDialog.FileName);
                 }
                 else
                 {

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using DPA_Musicsheets.Models.Commands;
+using DPA_Musicsheets.Models.Events;
 
 namespace DPA_Musicsheets.ViewModels
 {
@@ -51,6 +52,12 @@ namespace DPA_Musicsheets.ViewModels
             CommandBuilder cb = new CommandBuilder();
             shortcutHandler = new ShortcutHandler();
             firstCommand = cb.BuildCommands(musicLoader);
+            OwnEventmanager.Manager.Subscribe("changeInformativeText", ChangeInformativeMessage);
+        }
+
+        private void ChangeInformativeMessage(string message)
+        {
+            CurrentState = message;
         }
 
         public ICommand OpenFileCommand => new RelayCommand(() =>

@@ -3,6 +3,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using Sanford.Multimedia.Midi;
 using System;
+using DPA_Musicsheets.Models.Events;
 
 namespace DPA_Musicsheets.ViewModels
 {
@@ -80,6 +81,7 @@ namespace DPA_Musicsheets.ViewModels
         #region buttons for play, stop, pause
         public RelayCommand PlayCommand => new RelayCommand(() =>
         {
+            OwnEventmanager.Manager.DispatchEvent("changePlaying", "Playing");
             if (!_running)
             {
                 _running = true;
@@ -90,6 +92,7 @@ namespace DPA_Musicsheets.ViewModels
 
         public RelayCommand StopCommand => new RelayCommand(() =>
         {
+            OwnEventmanager.Manager.DispatchEvent("changePlaying", "Idle");
             _running = false;
             _sequencer.Stop();
             _sequencer.Position = 0;
@@ -98,6 +101,7 @@ namespace DPA_Musicsheets.ViewModels
 
         public RelayCommand PauseCommand => new RelayCommand(() =>
         {
+            OwnEventmanager.Manager.DispatchEvent("changePlaying", "Idle");
             _running = false;
             _sequencer.Stop();
             UpdateButtons();

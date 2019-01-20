@@ -125,6 +125,10 @@
     <Compile Include="Models\LilypondTokenKind.cs" />
     <Compile Include="ViewModels\Editor\Memento\Memento.cs" />
     <Compile Include="ViewModels\Editor\Memento\Originator.cs" />
+    <Compile Include="ViewModels\States\Editor\BlockedState.cs" />
+    <Compile Include="ViewModels\States\Editor\EditorState.cs" />
+    <Compile Include="ViewModels\States\Editor\IdleState.cs" />
+    <Compile Include="ViewModels\States\Editor\RenderingState.cs" />
     <Compile Include="ViewModels\MidiPlayerViewModel.cs" />
     <Compile Include="ViewModels\ShortcutHandler.cs" />
     <Compile Include="ViewModels\StaffsViewModel.cs" />
@@ -243,6 +247,9 @@
     <Content Include="Files\Eenvoudige voorbeeldfiles\Punten.ly" />
     <Content Include="Files\Eenvoudige voorbeeldfiles\Rusten.ly" />
     <Content Include="Files\Eenvoudige voorbeeldfiles\Standaard_noten.ly" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModels\States\Player\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
