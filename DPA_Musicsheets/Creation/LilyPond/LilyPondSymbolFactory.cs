@@ -9,13 +9,14 @@ namespace DPA_Musicsheets.Creation.LilyPond
     {
         public override Symbol create(string noteSpecifier)
         {
+            bool connected = noteSpecifier.StartsWith("~") || noteSpecifier.EndsWith("~");
             int higherPitch =  noteSpecifier.Count(f => f == '\'');
             int lowerPitch = noteSpecifier.Count(f => f == ',');
             var totalPitch = 4 + higherPitch + lowerPitch;
             var tone = getTone(noteSpecifier);
             var intonation = getIntonation(noteSpecifier);
             Length length = calculateDuration(noteSpecifier);
-            return new Note(tone, totalPitch, intonation) {dot = noteSpecifier.EndsWith("."), length = length};
+            return new Note(tone, totalPitch, intonation) {dot = noteSpecifier.EndsWith("."), length = length, connected = connected};
         }
 
         protected override Tones getTone(string toneSpecifier)

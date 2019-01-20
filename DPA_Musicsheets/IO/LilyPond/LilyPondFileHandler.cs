@@ -28,7 +28,7 @@ namespace DPA_Musicsheets.IO.LilyPond
             return this.buildSupportedFileTypeString();
         }
 
-        protected override Staff load(string filename)
+        protected override Score load(string filename)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -40,7 +40,7 @@ namespace DPA_Musicsheets.IO.LilyPond
             return interpreter.ConvertBack(sb.ToString());
         }
 
-        protected override bool save(string filename, Staff staff)
+        protected override bool save(string filename, Score staff)
         {
             var lily = interpreter.Convert(staff);
             if (lily == null) return false;

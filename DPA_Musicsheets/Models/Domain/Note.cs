@@ -16,7 +16,6 @@ namespace DPA_Musicsheets.Models.Domain
 
     public enum Length
     {
-        Breve = 0,
         Semibreve = 1,
         Minim = 2,
         Crotchet = 4,
@@ -40,12 +39,14 @@ namespace DPA_Musicsheets.Models.Domain
             this.tone = tone;
             this.pitch = pitch;
             this.intonation = intonation;
+            this.connected = false;
         }
 
         public Tones tone { get; private set; }
         public Length length { get; set; }
         public bool dot { get; set; }
         public int pitch { get; private set; }
+        public bool connected { get; set; }
         public Intonation intonation { get; private set; }
 
 

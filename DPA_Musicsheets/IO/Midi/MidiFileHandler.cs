@@ -22,7 +22,7 @@ namespace DPA_Musicsheets.IO.Midi
             return this.buildSupportedFileTypeString();
         }
 
-        protected override Staff load(string fileName)
+        protected override Score load(string fileName)
         {
             var midiSequence = new Sequence();
             midiSequence.Load(fileName);
@@ -30,7 +30,7 @@ namespace DPA_Musicsheets.IO.Midi
             return interpreter.ConvertBack(midiSequence);
         }
 
-        protected override bool save(string fileName, Staff staff)
+        protected override bool save(string fileName, Score staff)
         {
             var sequence = interpreter.Convert(staff);
             if (sequence == null) return false;

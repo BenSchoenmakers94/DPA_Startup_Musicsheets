@@ -127,12 +127,14 @@
     <Compile Include="Models\Commands\SaveAsPdfCommand.cs" />
     <Compile Include="Models\Domain\Bar.cs" />
     <Compile Include="Models\Domain\Clef.cs" />
+    <Compile Include="Models\Domain\Metronome.cs" />
     <Compile Include="Models\Domain\Note.cs" />
+    <Compile Include="Models\Domain\Score.cs" />
     <Compile Include="Models\Domain\Staff.cs" />
     <Compile Include="Models\Domain\Symbol.cs" />
-    <Compile Include="Models\Domain\Tempo.cs" />
     <Compile Include="Models\Events\Event.cs" />
     <Compile Include="Models\Events\OwnEventmanager.cs" />
+    <Compile Include="Models\Domain\TimeSignature.cs" />
     <Compile Include="Models\LilypondToken.cs" />
     <Compile Include="Models\LilypondTokenKind.cs" />
     <Compile Include="ViewModels\Editor\Memento\Memento.cs" />

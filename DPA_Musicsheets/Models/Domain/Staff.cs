@@ -5,16 +5,24 @@ namespace DPA_Musicsheets.Models.Domain
 {
     public class Staff
     {
-        public Staff()
+        public Staff(TimeSignature timeSignature, Metronome metronome, Clef clef)
         {
+            this.timeSignature = timeSignature;
+            this.metronome = metronome;
+            this.clef = clef;
             bars = new List<Bar>();
         }
 
-        public Staff parent { get; set; }
         public List<Bar> bars { get; private set; }
-        public Tuple<int, int> rhythm { get; set; }
-        public int bpm { get; set; }
+        public TimeSignature timeSignature { get; set; }
+        public Metronome metronome { get; set; }
+        public Clef clef { get; set; }
 
-        public double BarDuration => (double)rhythm.Item1 / (double)rhythm.Item2;
+        public void addBar(Bar bar)
+        {
+            bars.Add(bar);
+        }
+
+        public double BarDuration => (double)timeSignature.beatsPerMeasure / (double)timeSignature.lengthOfOneBeat;
     }
 }

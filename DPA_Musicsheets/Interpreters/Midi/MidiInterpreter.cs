@@ -5,12 +5,12 @@ namespace DPA_Musicsheets.Interpreters.Midi
 {
     public class MidiInterpreter : GenericInterpreter<Sequence>
     {
-        public override Sequence Convert(Staff song)
+        public override Sequence Convert(Score song)
         {
             throw new System.NotImplementedException();
         }
 
-        public override Staff ConvertBack(Sequence transformable)
+        public override Score ConvertBack(Sequence transformable)
         {
             throw new System.NotImplementedException();
         }

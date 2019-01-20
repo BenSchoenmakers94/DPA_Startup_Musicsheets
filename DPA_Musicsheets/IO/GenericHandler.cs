@@ -9,18 +9,18 @@ namespace DPA_Musicsheets.IO
     {
         public List<string> possibleExtensions { get; protected set; }
         public string fileType { get; protected set; }
-        public Staff loadFile(string fileName)
+        public Score loadFile(string fileName)
         {
             return canHandle(fileName) ? load(fileName) : null;
         }
 
-        public bool saveFile(string fileName, Staff staff)
+        public bool saveFile(string fileName, Score staff)
         {
             return canHandle(fileName) && save(fileName, staff);
         }
 
-        protected abstract Staff load(string filename);
-        protected abstract bool save(string filename, Staff staff);
+        protected abstract Score load(string filename);
+        protected abstract bool save(string filename, Score staff);
 
         public bool canHandle(string filename)
         {
