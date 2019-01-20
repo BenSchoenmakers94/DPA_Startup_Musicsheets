@@ -4,7 +4,7 @@ using DPA_Musicsheets.Models.Events;
 
 namespace DPA_Musicsheets.ViewModels.States.Editor
 {
-    public class RenderingState : IEditorState
+    public class RenderingState : EditorState
     {
         private DateTime lastChange;
         private static int MILLISECONDS_BEFORE_CHANGE_HANDLED = 1500;
@@ -16,14 +16,14 @@ namespace DPA_Musicsheets.ViewModels.States.Editor
         {
             lastChange = DateTime.Now;
             OwnEventmanager.Manager.DispatchEvent("changeInformativeText", showText);
-            Task.Delay(MILLISECONDS_BEFORE_CHANGE_HANDLED).ContinueWith((task) =>
+            Task.Delay(MILLISECONDS_BEFORE_CHANGE_HANDLED).ContinueWith(task =>
             {
                 if ((DateTime.Now - lastChange).TotalMilliseconds >= MILLISECONDS_BEFORE_CHANGE_HANDLED)
                 {
                     owner.UndoCommand.RaiseCanExecuteChanged();
 
                     owner.MusicLoader.LoadLilypondIntoWpfStaffsAndMidi(owner.LilypondText);
-                    OwnEventmanager.Manager.DispatchEvent("changePlaying", "Idle");
+                    OwnEventmanager.Manager.DispatchEvent("changeEditorState", "Idle");
                 }
             }, TaskScheduler.FromCurrentSynchronizationContext()); // Request from main thread.
         }

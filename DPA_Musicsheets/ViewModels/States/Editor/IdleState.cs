@@ -2,7 +2,7 @@
 
 namespace DPA_Musicsheets.ViewModels.States.Editor
 {
-    public class IdleState : IEditorState
+    public class IdleState : EditorState
     {
         public IdleState()
         {

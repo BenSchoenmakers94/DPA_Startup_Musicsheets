@@ -3,7 +3,9 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using Sanford.Multimedia.Midi;
 using System;
+using System.Collections.Generic;
 using DPA_Musicsheets.Models.Events;
+using DPA_Musicsheets.ViewModels.States.Player;
 
 namespace DPA_Musicsheets.ViewModels
 {
@@ -15,6 +17,8 @@ namespace DPA_Musicsheets.ViewModels
     {
         private OutputDevice _outputDevice;
         private bool _running;
+        private Dictionary<string, PlayerState> states;
+        private PlayerState current;
 
         // This sequencer creates a possibility to play a sequence.
         // It has a timer and raises events on the right moments.
@@ -22,11 +26,22 @@ namespace DPA_Musicsheets.ViewModels
 
         public Sequence MidiSequence
         {
-            get { return _sequencer.Sequence; }
+            get => _sequencer.Sequence;
             set
             {
                 StopCommand.Execute(null);
                 _sequencer.Sequence = value;
+                UpdateButtons();
+            }
+        }
+
+        public bool Running
+        {
+            get => _running;
+            set
+            {
+                _running = value;
+                RaisePropertyChanged(() => Running);
                 UpdateButtons();
             }
         }
@@ -50,9 +65,25 @@ namespace DPA_Musicsheets.ViewModels
 
             // TODO: Can we use some sort of eventing system so the managers layer doesn't have to know the viewmodel layer?
             musicLoader.MidiPlayerViewModel = this;
+
+            states = new Dictionary<string, PlayerState>
+            {
+                {"Playing", new PlayingState(_sequencer) },
+                {"Paused", new PausedState(_sequencer) },
+                {"Stopped", new StoppedState(_sequencer) }
+            };
+
+            ChangeState("Stopped");
+            OwnEventmanager.Manager.Subscribe("changePlayerState", ChangeState);
         }
 
-        private void UpdateButtons()
+        private void ChangeState(string newState)
+        {
+            current = states[newState];
+            current.GoInto(this);
+        }
+
+        public void UpdateButtons()
         {
             PlayCommand.RaiseCanExecuteChanged();
             PauseCommand.RaiseCanExecuteChanged();
@@ -81,30 +112,17 @@ namespace DPA_Musicsheets.ViewModels
         #region buttons for play, stop, pause
         public RelayCommand PlayCommand => new RelayCommand(() =>
         {
-            OwnEventmanager.Manager.DispatchEvent("changePlaying", "Playing");
-            if (!_running)
-            {
-                _running = true;
-                _sequencer.Continue();
-                UpdateButtons();
-            }
+            OwnEventmanager.Manager.DispatchEvent("changePlayerState", "Playing");
         }, () => !_running && _sequencer.Sequence != null);
 
         public RelayCommand StopCommand => new RelayCommand(() =>
         {
-            OwnEventmanager.Manager.DispatchEvent("changePlaying", "Idle");
-            _running = false;
-            _sequencer.Stop();
-            _sequencer.Position = 0;
-            UpdateButtons();
+            OwnEventmanager.Manager.DispatchEvent("changePlayerState", "Stopped");
         }, () => _running);
 
         public RelayCommand PauseCommand => new RelayCommand(() =>
         {
-            OwnEventmanager.Manager.DispatchEvent("changePlaying", "Idle");
-            _running = false;
-            _sequencer.Stop();
-            UpdateButtons();
+            OwnEventmanager.Manager.DispatchEvent("changePlayerState", "Paused");
         }, () => _running);
 
         #endregion buttons for play, stop, pause

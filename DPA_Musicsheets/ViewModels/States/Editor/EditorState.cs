@@ -1,6 +1,6 @@
 ﻿namespace DPA_Musicsheets.ViewModels.States.Editor
 {
-    public abstract class IEditorState
+    public abstract class EditorState
     {
         protected string showText;
 

@@ -14,7 +14,8 @@ namespace DPA_Musicsheets.Models.Events
             {
                 {"addLilyPondToken", new Event<string>() }  ,
                 {"changeInformativeText", new Event<string>() },
-                {"changePlaying", new Event<string>() }
+                {"changeEditorState", new Event<string>() },
+                {"changePlayerState", new Event<string>() }
             };
         }
 

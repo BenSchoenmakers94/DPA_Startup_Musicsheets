@@ -2,16 +2,11 @@
 
 namespace DPA_Musicsheets.ViewModels.States.Editor
 {
-    public class BlockedState : IEditorState
+    public class BlockedState : EditorState
     {
-        public BlockedState()
-        {
-            showText = "Playing...";
-        }
         public override void GoInto(LilypondViewModel owner)
         {
             owner.CanEdit = false;
-            OwnEventmanager.Manager.DispatchEvent("changeInformativeText", showText);
         }
     }
 }

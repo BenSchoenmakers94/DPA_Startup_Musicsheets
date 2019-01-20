@@ -21,8 +21,8 @@ namespace DPA_Musicsheets.ViewModels
         private readonly Stack<Memento> undoStack;
         private readonly Stack<Memento> redoStack;
         private readonly Originator originator;
-        private IEditorState current;
-        private readonly Dictionary<string, IEditorState> states;
+        private EditorState current;
+        private readonly Dictionary<string, EditorState> states;
 
         /// <summary>
         /// This text will be in the textbox.
@@ -71,16 +71,15 @@ namespace DPA_Musicsheets.ViewModels
             redoStack = new Stack<Memento>();
             originator = new Originator();
 
-            states = new Dictionary<string, IEditorState>()
+            states = new Dictionary<string, EditorState>()
             {
                 {"Idle", new IdleState() },
                 {"Rendering", new RenderingState() },
                 {"Playing", new BlockedState() }
             };
 
-            current = states["Idle"];
-            current.GoInto(this);
-            OwnEventmanager.Manager.Subscribe("changePlaying", changeState);
+            ChangeState("Idle");
+            OwnEventmanager.Manager.Subscribe("changeEditorState", ChangeState);
         }
 
         public void LilypondTextLoaded(string text)
@@ -92,7 +91,7 @@ namespace DPA_Musicsheets.ViewModels
             _textChangedByLoad = false;
         }
 
-        private void changeState(string newState)
+        private void ChangeState(string newState)
         {
             current = states[newState];
             current.GoInto(this);
