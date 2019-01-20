@@ -9,5 +9,6 @@ namespace DPA_Musicsheets.Models.Visitor
         void Visit(Bar bar);
         void Visit(Clef clef);
         void Visit(Metronome metronome);
+        void Visit(TimeSignature timeSignature);
     }
 }

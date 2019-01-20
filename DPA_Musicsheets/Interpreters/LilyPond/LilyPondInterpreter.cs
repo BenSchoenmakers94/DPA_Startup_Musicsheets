@@ -13,7 +13,7 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
     public class LilyPondInterpreter : GenericInterpreter<string>, IVisitor
     {
         private LilyPondNoteFactory factory_;
-        private string currentAppendedText_;
+        private StringBuilder stringBuilder_;
 
         public LilyPondInterpreter(LilyPondNoteFactory factory)
         {
@@ -22,41 +22,31 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
 
         public override string Convert(Score song)
         {
-            var sb = new StringBuilder();
-            sb.AppendLine("\\relative c' { ");
-            sb.AppendLine($"\\clef {song.staffsInScore.FirstOrDefault()?.clef.getClefName()} ");
-            sb.AppendLine($"\\time {song.staffsInScore.FirstOrDefault()?.timeSignature.beatsPerMeasure}/{song.staffsInScore.FirstOrDefault()?.timeSignature.lengthOfOneBeat} ");
+            stringBuilder_ = new StringBuilder();
+            stringBuilder_.AppendLine("\\relative c' { ");
+            stringBuilder_.AppendLine($"\\clef {song.staffsInScore.FirstOrDefault()?.clef.getClefName()} ");
+            stringBuilder_.AppendLine($"\\time {song.staffsInScore.FirstOrDefault()?.timeSignature.beatsPerMeasure}/{song.staffsInScore.FirstOrDefault()?.timeSignature.lengthOfOneBeat} ");
             var list = song.staffsInScore.FirstOrDefault()?.metronome.getBeatsPerMinute();
-            sb.AppendLine(list?.Count > 1
+            stringBuilder_.AppendLine(list?.Count > 1
                 ? $"\\tempo {song.staffsInScore.FirstOrDefault()?.metronome.tempoIndication}={list?[0]}-{list?[1]} "
                 : $"\\tempo {song.staffsInScore.FirstOrDefault()?.metronome.tempoIndication}={list?[0]} ");
 
 
             foreach (var staff in song.staffsInScore)
             {
+                staff.clef.Accept(this);
+                staff.timeSignature.Accept(this);
+                staff.metronome.Accept(this);
                 foreach (var bar in staff.bars)
                 {
                     foreach (var note in bar.notes)
                     {
-                        if (note is Note)
-                        {
-                            note =  note;
-                            sb.Append(note.tone == Tones.NO_TONE ? "r" : note.tone.ToString());
-                            if (note.pitch == 3) sb.Append('\'');
-                            if (note.pitch == 5) sb.Append(',');
-                            if (note.intonation == Intonation.Flat) sb.Append('\'');
-                            if (note.intonation == Intonation.Sharp) sb.Append('\'');
-                            sb.Append(note.length);
-                            if (note.dot) sb.Append('.');
-                            sb.Append(" ");
-                        }
+                       note.Accept(this);
                     }
-
-                    sb.Append("| \n");
+                    bar.Accept(this);
                 }
             }
-
-            return sb.ToString();
+            return stringBuilder_.ToString();
         }
 
         public override Score ConvertBack(string transformable)
@@ -177,12 +167,19 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
 
         public void Visit(Note note)
         {
-            throw new NotImplementedException();
+            stringBuilder_.Append(note.tone == Tones.NO_TONE ? "r" : note.tone.ToString());
+            if (note.pitch == 3) stringBuilder_.Append('\'');
+            if (note.pitch == 5) stringBuilder_.Append(',');
+            if (note.intonation == Intonation.Flat) stringBuilder_.Append('\'');
+            if (note.intonation == Intonation.Sharp) stringBuilder_.Append('\'');
+            stringBuilder_.Append(note.length);
+            if (note.dot) stringBuilder_.Append('.');
+            stringBuilder_.Append(" ");
         }
 
         public void Visit(Bar bar)
         {
-            throw new NotImplementedException();
+            stringBuilder_.Append("| \n");
         }
 
         public void Visit(Clef clef)
