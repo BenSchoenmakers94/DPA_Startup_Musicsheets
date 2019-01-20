@@ -77,7 +77,7 @@ namespace DPA_Musicsheets.ViewModels
             OwnEventmanager.Manager.Subscribe("changePlayerState", ChangeState);
         }
 
-        private void ChangeState(string newState)
+        public void ChangeState(string newState)
         {
             current = states[newState];
             current.GoInto(this);
@@ -112,17 +112,17 @@ namespace DPA_Musicsheets.ViewModels
         #region buttons for play, stop, pause
         public RelayCommand PlayCommand => new RelayCommand(() =>
         {
-            OwnEventmanager.Manager.DispatchEvent("changePlayerState", "Playing");
+            current.Play(this);
         }, () => !_running && _sequencer.Sequence != null);
 
         public RelayCommand StopCommand => new RelayCommand(() =>
         {
-            OwnEventmanager.Manager.DispatchEvent("changePlayerState", "Stopped");
+            current.Stop(this);
         }, () => _running);
 
         public RelayCommand PauseCommand => new RelayCommand(() =>
         {
-            OwnEventmanager.Manager.DispatchEvent("changePlayerState", "Paused");
+            current.Pause(this);
         }, () => _running);
 
         #endregion buttons for play, stop, pause

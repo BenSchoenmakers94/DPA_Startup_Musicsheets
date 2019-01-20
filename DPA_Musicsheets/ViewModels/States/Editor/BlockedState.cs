@@ -1,6 +1,4 @@
-﻿using DPA_Musicsheets.Models.Events;
-
-namespace DPA_Musicsheets.ViewModels.States.Editor
+﻿namespace DPA_Musicsheets.ViewModels.States.Editor
 {
     public class BlockedState : EditorState
     {

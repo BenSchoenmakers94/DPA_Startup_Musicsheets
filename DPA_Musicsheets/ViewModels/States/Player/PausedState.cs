@@ -8,13 +8,19 @@ namespace DPA_Musicsheets.ViewModels.States.Player
         public PausedState(Sequencer sequencer) : base(sequencer)
         {
         }
-        public override void GoInto(MidiPlayerViewModel owner)
+
+        public override void Pause(MidiPlayerViewModel owner)
         {
             owner.Running = false;
             sequencer.Stop();
             owner.UpdateButtons();
             OwnEventmanager.Manager.DispatchEvent("changeInformativeText", showText);
             OwnEventmanager.Manager.DispatchEvent("changeEditorState", "Idle");
+        }
+
+        public override void GoInto(MidiPlayerViewModel owner)
+        {
+            Pause(owner);
         }
     }
 }

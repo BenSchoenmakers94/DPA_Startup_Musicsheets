@@ -12,9 +12,24 @@ namespace DPA_Musicsheets.ViewModels.States.Player
             showText = "";
         }
 
+        public virtual void Play(MidiPlayerViewModel owner)
+        {
+            owner.ChangeState("Playing");
+        }
+
+        public virtual void Pause(MidiPlayerViewModel owner)
+        {
+            owner.ChangeState("Paused");
+        }
+
+        public virtual void Stop(MidiPlayerViewModel owner)
+        {
+            owner.ChangeState("Stopped");
+        }
+
         public virtual void GoInto(MidiPlayerViewModel owner)
         {
-
+            
         }
     }
 }

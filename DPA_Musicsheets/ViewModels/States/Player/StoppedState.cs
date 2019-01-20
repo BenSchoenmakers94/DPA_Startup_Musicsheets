@@ -8,7 +8,7 @@ namespace DPA_Musicsheets.ViewModels.States.Player
         public StoppedState(Sequencer sequencer) : base(sequencer)
         {
         }
-        public override void GoInto(MidiPlayerViewModel owner)
+        public override void Stop(MidiPlayerViewModel owner)
         {
             owner.Running = false;
             sequencer.Stop();
@@ -16,6 +16,11 @@ namespace DPA_Musicsheets.ViewModels.States.Player
             owner.UpdateButtons();
             OwnEventmanager.Manager.DispatchEvent("changeInformativeText", showText);
             OwnEventmanager.Manager.DispatchEvent("changeEditorState", "Idle");
+        }
+
+        public override void GoInto(MidiPlayerViewModel owner)
+        {
+            Stop(owner);
         }
     }
 }
