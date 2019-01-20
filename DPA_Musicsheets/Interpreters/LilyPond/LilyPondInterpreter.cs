@@ -199,10 +199,5 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
         {
             stringBuilder_.AppendLine($"\\time {timeSignature.beatsPerMeasure}/{timeSignature.lengthOfOneBeat} ");
         }
-
-        public void Visit(TimeSignature timeSignature)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

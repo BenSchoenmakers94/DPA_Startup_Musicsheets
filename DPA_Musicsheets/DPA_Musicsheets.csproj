@@ -210,6 +210,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="ClassDiagrams\CD_DPA_Musicsheets.cd" />
+    <None Include="ClassDiagrams\Post_Refactor_Diagram.cd" />
     <None Include="Files\Eenvoudige voorbeeldfiles\Doorklinken.pdf" />
     <None Include="Files\Eenvoudige voorbeeldfiles\Keywords.pdf" />
     <None Include="Files\Eenvoudige voorbeeldfiles\Maatwissel.pdf" />
