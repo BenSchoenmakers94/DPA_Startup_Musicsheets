@@ -100,6 +100,10 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
                         }
                         score.staffsInScore.Last().clef = newClef;
                         break;
+                    case LilypondTokenKind.Rest:
+                        Rest rest = new Rest();
+
+                        break;
                 }
                 current = current.NextToken;
             }

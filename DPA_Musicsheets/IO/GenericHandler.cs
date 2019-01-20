@@ -9,6 +9,8 @@ namespace DPA_Musicsheets.IO
     {
         public List<string> possibleExtensions { get; protected set; }
         public string fileType { get; protected set; }
+        public bool CanSave { get; set; }
+        public bool CanLoad { get; set; }
         public Score loadFile(string fileName)
         {
             return canHandle(fileName) ? load(fileName) : null;
@@ -21,6 +23,8 @@ namespace DPA_Musicsheets.IO
 
         protected abstract Score load(string filename);
         protected abstract bool save(string filename, Score staff);
+
+        public abstract void saveToFile(string fileLocation, string text);
 
         public bool canHandle(string filename)
         {

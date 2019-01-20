@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using DPA_Musicsheets.IO;
 using DPA_Musicsheets.Models.Events;
 using DPA_Musicsheets.ViewModels.Editor.Memento;
 using DPA_Musicsheets.ViewModels.States.Editor;
@@ -162,28 +163,16 @@ namespace DPA_Musicsheets.ViewModels
 
         private void Save()
         {
-            // TODO: In the application a lot of classes know which filetypes are supported. Lots and lots of repeated code here...
-            // TODO save file event? -> the same as the main view model save?
-            // Can this be done better?
-            SaveFileDialog saveFileDialog = new SaveFileDialog { Filter = "Midi|*.mid|Lilypond|*.ly|PDF|*.pdf" };
+            FileChoiceHandler fch = new FileChoiceHandler();
+            SaveFileDialog saveFileDialog = new SaveFileDialog { Filter = fch.GetSupportedSaveTypes() };
             bool success = false;
             if (saveFileDialog.ShowDialog() == true)
             {
                 string extension = Path.GetExtension(saveFileDialog.FileName);
-                if (extension.EndsWith(".mid"))
+                if (fch.IsValidFile(extension))
                 {
-                    MusicLoader.SaveToMidi(saveFileDialog.FileName);
                     success = true;
-                }
-                else if (extension.EndsWith(".ly"))
-                {
-                    MusicLoader.SaveToLilypond(saveFileDialog.FileName);
-                    success = true;
-                }
-                else if (extension.EndsWith(".pdf"))
-                {
-                    MusicLoader.SaveToPDF(saveFileDialog.FileName);
-                    success = true;
+                    fch.SaveFile(saveFileDialog.FileName, LilypondText);
                 }
                 else
                 {
