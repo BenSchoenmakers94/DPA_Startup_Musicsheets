@@ -34,7 +34,7 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
                 {
                     foreach (var note in bar.notes)
                     {
-                       note.Accept(this);
+                        note.Accept(this);
                     }
                     bar.Accept(this);
                 }
@@ -60,7 +60,7 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
                         break;
                     case LilypondTokenKind.Tempo:
                         var tempoSections = current.NextToken.Value.Split('=');
-                        Length lengthOfBeat = (Length) Int32.Parse(tempoSections.First());
+                        Length lengthOfBeat = (Length)Int32.Parse(tempoSections.First());
                         var rangeMeasures = tempoSections.Last().Split('-');
                         if (rangeMeasures.Length > 1)
                         {
