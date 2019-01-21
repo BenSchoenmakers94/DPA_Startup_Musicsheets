@@ -1,10 +1,11 @@
-﻿using DPA_Musicsheets.Managers;
+﻿using DPA_Musicsheets.IO;
+using DPA_Musicsheets.Managers;
 
 namespace DPA_Musicsheets.Models.Commands
 {
     public class SaveAsPdfCommand : Command
     {
-        public SaveAsPdfCommand(MusicLoader musicLoader) : base(musicLoader)
+        public SaveAsPdfCommand(FileHandleFacade fileHandleFacade) : base(fileHandleFacade)
         {
             ActionOption = ActionOption.SaveAsPdf;
         }
@@ -14,7 +15,8 @@ namespace DPA_Musicsheets.Models.Commands
             if (CanExecute(actionOption))
             {
                 // parameter is the file path
-                MusicLoader.SaveToPDF(parameter);
+                //TODO fix this so it has the content
+                //FileHandleFacade.SaveFile(parameter);
             }
             else
             {

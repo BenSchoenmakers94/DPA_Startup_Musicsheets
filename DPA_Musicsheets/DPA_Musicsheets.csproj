@@ -111,7 +111,7 @@
     <Compile Include="Interpreters\GenericInterpreter.cs" />
     <Compile Include="Interpreters\LilyPond\LilyPondInterpreter.cs" />
     <Compile Include="Interpreters\Midi\MidiInterpreter.cs" />
-    <Compile Include="IO\FileChoiceHandler.cs" />
+    <Compile Include="IO\FileHandleFacade.cs" />
     <Compile Include="IO\GenericHandler.cs" />
     <Compile Include="IO\LilyPond\LilyPondFileHandler.cs" />
     <Compile Include="IO\Midi\MidiFileHandler.cs" />

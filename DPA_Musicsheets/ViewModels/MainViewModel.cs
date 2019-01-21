@@ -20,7 +20,7 @@ namespace DPA_Musicsheets.ViewModels
         private string _fileName;
         private readonly Command firstCommand;
         private readonly ShortcutHandler shortcutHandler;
-        private readonly FileChoiceHandler fileChoiceHandler;
+        private readonly FileHandleFacade _fileHandleFacade;
         public string FileName
         {
             get => _fileName;
@@ -42,25 +42,22 @@ namespace DPA_Musicsheets.ViewModels
             set { _currentState = value; RaisePropertyChanged(() => CurrentState); }
         }
 
-        private MusicLoader _musicLoader;
-
-        public MainViewModel(MusicLoader musicLoader)
+        public MainViewModel()
         {
-            // TODO: Can we use some sort of eventing system so the managers layer doesn't have to know the viewmodel layer?
-            _musicLoader = musicLoader;
             FileName = @"Files/Alle-eendjes-zwemmen-in-het-water.mid";
             downKeyQueue = new List<Key>();
             upKeyQueue = new List<Key>();
             CommandBuilder cb = new CommandBuilder();
             shortcutHandler = new ShortcutHandler();
-            firstCommand = cb.BuildCommands(musicLoader);
+            //TODO change to facade
+            firstCommand = cb.BuildCommands(new FileHandleFacade());
             OwnEventmanager.Manager.Subscribe("changeInformativeText", ChangeInformativeMessage);
-            fileChoiceHandler = new FileChoiceHandler();
+            _fileHandleFacade = new FileHandleFacade();
         }
 
-        private void ChangeInformativeMessage(string message)
+        private void ChangeInformativeMessage(object obj)
         {
-            CurrentState = message;
+            CurrentState = (string)obj;
         }
 
         public ICommand OpenFileCommand => new RelayCommand(() =>
@@ -143,13 +140,13 @@ namespace DPA_Musicsheets.ViewModels
 
         private string OpenOpenFileDialog()
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog { Filter = fileChoiceHandler.GetSupportedLoadTypes()};
+            OpenFileDialog openFileDialog = new OpenFileDialog { Filter = _fileHandleFacade.GetSupportedLoadTypes()};
             return openFileDialog.ShowDialog() == true ? openFileDialog.FileName : null;
         }
 
         private string OpenSaveFileDialog()
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog { Filter = fileChoiceHandler.GetSupportedSaveTypes() };
+            SaveFileDialog saveFileDialog = new SaveFileDialog { Filter = _fileHandleFacade.GetSupportedSaveTypes() };
             return saveFileDialog.ShowDialog() == true ? saveFileDialog.FileName : null;
         }
 
@@ -171,7 +168,7 @@ namespace DPA_Musicsheets.ViewModels
 
         public ICommand OnWindowClosingCommand => new RelayCommand(() =>
         {
-            OwnEventmanager.Manager.DispatchEvent("onClose", "");
+            OwnEventmanager.Manager.DispatchEvent("onClose", null);
             ViewModelLocator.Cleanup();
         });
         #endregion Focus and key commands, these can be used for implementing hotkeys

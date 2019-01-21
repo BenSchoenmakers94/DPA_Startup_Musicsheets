@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Input;
-using DPA_Musicsheets.Managers;
+﻿using DPA_Musicsheets.IO;
 
 namespace DPA_Musicsheets.Models.Commands
 {
@@ -11,10 +8,10 @@ namespace DPA_Musicsheets.Models.Commands
         protected bool CanExecute(ActionOption actionOption) => actionOption == ActionOption;
         public Command Next { get; set; }
         protected ActionOption ActionOption;
-        protected readonly MusicLoader MusicLoader;
-        public Command(MusicLoader musicLoader)
+        protected readonly FileHandleFacade FileHandleFacade;
+        public Command(FileHandleFacade fileHandleFacade)
         {
-            MusicLoader = musicLoader;
+            FileHandleFacade = fileHandleFacade;
         }
     }
 }

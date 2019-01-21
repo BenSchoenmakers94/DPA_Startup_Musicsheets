@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Input;
+using DPA_Musicsheets.IO;
 using DPA_Musicsheets.Managers;
 using DPA_Musicsheets.Models.Events;
 
@@ -7,7 +8,7 @@ namespace DPA_Musicsheets.Models.Commands
 {
     public class AddClefTrebleCommand : Command
     {
-        public AddClefTrebleCommand(MusicLoader musicLoader) : base(musicLoader)
+        public AddClefTrebleCommand(FileHandleFacade fileHandleFacade) : base(fileHandleFacade)
         {
             ActionOption = ActionOption.AddClefTreble;
         }

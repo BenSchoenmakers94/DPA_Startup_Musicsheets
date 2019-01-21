@@ -6,14 +6,15 @@ using DPA_Musicsheets.Interpreters.Midi;
 using DPA_Musicsheets.IO.LilyPond;
 using DPA_Musicsheets.IO.Midi;
 using DPA_Musicsheets.IO.Pdf;
+using DPA_Musicsheets.Models.Events;
 
 namespace DPA_Musicsheets.IO
 {
-    public class FileChoiceHandler
+    public class FileHandleFacade
     {
         private readonly List<GenericHandler> handlers;
 
-        public FileChoiceHandler()
+        public FileHandleFacade()
         {
             var lilyPondFileHandler = new LilyPondFileHandler(new LilyPondInterpreter(new LilyPondNoteFactory()));
             var midiFileHandler = new MidiFileHandler(new MidiInterpreter());
@@ -39,20 +40,28 @@ namespace DPA_Musicsheets.IO
             List<GenericHandler> canSaves = handlers.Where(h => h.CanLoad).ToList();
             string names = canSaves.Aggregate("", (current, handler) => current + handler.fileType + " or ");
             names = names.TrimEnd(' ', 'r', 'o');
-            names += " files";
+            names += " files ";
+            //OpenFileDialog openFileDialog = new OpenFileDialog() { Filter = "Midi or LilyPond files (*.mid *.ly)|*.mid;*.ly" };
 
             string list = canSaves.Aggregate("(", (current1, save) => save.possibleExtensions.Aggregate(current1, (current, ext) => current + "*" + ext + " "));
             list = list.TrimEnd(' ');
             list += ")|";
 
-            string list2 = canSaves.Aggregate("(", (current1, save) => save.possibleExtensions.Aggregate(current1, (current, ext) => current + "*" + ext + ";"));
+            string list2 = canSaves.Aggregate("", (current1, save) => save.possibleExtensions.Aggregate(current1, (current, ext) => current + "*" + ext + ";"));
             list2 = list2.TrimEnd(';');
-            return names + list + list2;
+            string res = names + list + list2;
+            return res;
         }
 
         public bool IsValidFile(string filePath)
         {
             return handlers.Any(h => h.canHandle(filePath));
+        }
+
+        public void Load(string fileName)
+        {
+            //TODO dispatch set string func of the lilypond editor
+            OwnEventmanager.Manager.DispatchEvent("setStaffs", handlers.First(h => h.canHandle(fileName)).loadFile(fileName));
         }
 
         public void SaveFile(string path, string content)

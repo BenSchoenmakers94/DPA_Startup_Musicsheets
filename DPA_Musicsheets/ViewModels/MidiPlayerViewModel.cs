@@ -77,9 +77,9 @@ namespace DPA_Musicsheets.ViewModels
             OwnEventmanager.Manager.Subscribe("changePlayerState", ChangeState);
         }
 
-        public void ChangeState(string newState)
+        public void ChangeState(object obj)
         {
-            current = states[newState];
+            current = states[(string)obj];
             current.GoInto(this);
         }
 

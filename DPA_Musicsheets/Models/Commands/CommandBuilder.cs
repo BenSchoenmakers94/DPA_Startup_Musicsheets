@@ -1,18 +1,19 @@
-﻿using DPA_Musicsheets.Managers;
+﻿using DPA_Musicsheets.IO;
+using DPA_Musicsheets.Managers;
 
 namespace DPA_Musicsheets.Models.Commands
 {
     public class CommandBuilder
     {
-        public Command BuildCommands(MusicLoader musicLoader)
+        public Command BuildCommands(FileHandleFacade fileHandlerFacade)
         {
-            Command first = new AddClefTrebleCommand(musicLoader);
-            Command second = new AddTempoCommand(musicLoader);
-            Command third = new AddTimeCommand(musicLoader);
-            Command fourth = new OpenFileCommand(musicLoader);
-            Command fifth = new SaveAsLilyPondCommand(musicLoader);
-            Command sixth = new SaveAsPdfCommand(musicLoader);
-            Command backStop = new Command(musicLoader);
+            Command first = new AddClefTrebleCommand(fileHandlerFacade);
+            Command second = new AddTempoCommand(fileHandlerFacade);
+            Command third = new AddTimeCommand(fileHandlerFacade);
+            Command fourth = new OpenFileCommand(fileHandlerFacade);
+            Command fifth = new SaveAsLilyPondCommand(fileHandlerFacade);
+            Command sixth = new SaveAsPdfCommand(fileHandlerFacade);
+            Command backStop = new Command(fileHandlerFacade);
             first.Next = second;
             second.Next = third;
             third.Next = fourth;

@@ -1,11 +1,12 @@
-﻿using DPA_Musicsheets.Managers;
+﻿using DPA_Musicsheets.IO;
+using DPA_Musicsheets.Managers;
 using DPA_Musicsheets.Models.Events;
 
 namespace DPA_Musicsheets.Models.Commands
 {
     public class AddTempoCommand : Command
     {
-        public AddTempoCommand(MusicLoader musicLoader) : base(musicLoader)
+        public AddTempoCommand(FileHandleFacade fileHandleFacade) : base(fileHandleFacade)
         {
             ActionOption = ActionOption.AddTempo;
         }

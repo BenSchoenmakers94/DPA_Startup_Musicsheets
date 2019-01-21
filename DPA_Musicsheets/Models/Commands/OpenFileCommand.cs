@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Input;
+using DPA_Musicsheets.IO;
 using DPA_Musicsheets.Managers;
 
 namespace DPA_Musicsheets.Models.Commands
 {
     public class OpenFileCommand : Command
     {
-        public OpenFileCommand(MusicLoader musicLoader) : base(musicLoader)
+        public OpenFileCommand(FileHandleFacade fileHandleFacade) : base(fileHandleFacade)
         {
             ActionOption = ActionOption.OpenFile;
         }
@@ -16,7 +17,7 @@ namespace DPA_Musicsheets.Models.Commands
             if (CanExecute(actionOption))
             {
                 //Parameter is the path to the file
-                MusicLoader.OpenFile(parameter);
+                FileHandleFacade.Load(parameter);
             }
             else
             {

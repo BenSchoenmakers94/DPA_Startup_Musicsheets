@@ -5,24 +5,24 @@ namespace DPA_Musicsheets.Models.Events
 {
     public class Event<T>
     {
-        private readonly List<Action<string>> actions;
+        private readonly List<Action<T>> actions;
 
-        public Event(List<Action<string>> actions)
+        public Event(List<Action<T>> actions)
         {
             this.actions = actions;
         }
 
         public Event()
         {
-            actions = new List<Action<string>>();
+            actions = new List<Action<T>>();
         }
 
-        public void Dispatch(string arg)
+        public void Dispatch(T arg)
         {
             actions.ForEach(a => a.Invoke(arg));
         }
 
-        public void Subscribe(Action<string> newAction)
+        public void Subscribe(Action<T> newAction)
         {
             actions.Add(newAction);
         }
