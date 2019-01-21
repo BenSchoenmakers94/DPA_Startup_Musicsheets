@@ -12,7 +12,7 @@ namespace DPA_Musicsheets.Models.Commands
             ActionOption = ActionOption.OpenFile;
         }
 
-        public override void Execute(ActionOption actionOption, string parameter = null)
+        public override void Execute(ActionOption actionOption, string parameter = null, string parameter2 = null)
         {
             if (CanExecute(actionOption))
             {

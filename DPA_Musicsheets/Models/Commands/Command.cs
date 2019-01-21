@@ -4,7 +4,7 @@ namespace DPA_Musicsheets.Models.Commands
 {
     public class Command
     {
-        public virtual void Execute(ActionOption actionOption, string parameter = null) {}
+        public virtual void Execute(ActionOption actionOption, string parameter = null, string parameter2 = null) {}
         protected bool CanExecute(ActionOption actionOption) => actionOption == ActionOption;
         public Command Next { get; set; }
         protected ActionOption ActionOption;

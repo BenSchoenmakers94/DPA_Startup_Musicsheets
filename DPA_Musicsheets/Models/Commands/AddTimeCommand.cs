@@ -10,7 +10,7 @@ namespace DPA_Musicsheets.Models.Commands
         {
             ActionOption = ActionOption.AddTime;
         }
-        public override void Execute(ActionOption actionOption, string parameter = null)
+        public override void Execute(ActionOption actionOption, string parameter = null, string parameter2 = null)
         {
             // parameter is the optional additional time
             if (CanExecute(actionOption))

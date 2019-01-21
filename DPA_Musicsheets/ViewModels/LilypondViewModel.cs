@@ -45,6 +45,7 @@ namespace DPA_Musicsheets.ViewModels
                 }
                 _text = value;
                 RaisePropertyChanged(() => LilypondText);
+                OwnEventmanager.Manager.DispatchEvent("changedLilyPond", _text);
             }
         }
 

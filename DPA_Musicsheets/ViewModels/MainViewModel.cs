@@ -1,11 +1,9 @@
-﻿using DPA_Musicsheets.Managers;
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 using DPA_Musicsheets.IO;
 using DPA_Musicsheets.Models.Commands;
@@ -31,6 +29,8 @@ namespace DPA_Musicsheets.ViewModels
             }
         }
 
+        private string lilyPondText;        
+
         /// <summary>
         /// The current state can be used to display some text.
         /// "Rendering..." is a text that will be displayed for example.
@@ -51,7 +51,13 @@ namespace DPA_Musicsheets.ViewModels
             shortcutHandler = new ShortcutHandler();
             firstCommand = cb.BuildCommands(fileHandleFacade);
             OwnEventmanager.Manager.Subscribe("changeInformativeText", ChangeInformativeMessage);
+            OwnEventmanager.Manager.Subscribe("changedLilyPond", SetLilyPondText);
             _fileHandleFacade = new FileHandleFacade();
+        }
+
+        private void SetLilyPondText(object obj)
+        {
+            lilyPondText = (string) obj;
         }
 
         private void ChangeInformativeMessage(object obj)
@@ -61,7 +67,7 @@ namespace DPA_Musicsheets.ViewModels
 
         public ICommand OpenFileCommand => new RelayCommand(() =>
         {
-            FileName = OpenOpenFileDialog();
+            FileName = OpenOpenFileDialog(null);
         });
 
         public ICommand LoadCommand => new RelayCommand(() =>
@@ -137,21 +143,26 @@ namespace DPA_Musicsheets.ViewModels
            Console.WriteLine($@"Key Up: {key}");
        });
 
-        private string OpenOpenFileDialog()
+        private string OpenOpenFileDialog(string filter)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog { Filter = _fileHandleFacade.GetSupportedLoadTypes()};
+            if (filter == null)
+            {
+                filter = _fileHandleFacade.GetSupportedLoadTypes(); 
+
+            }
+            OpenFileDialog openFileDialog = new OpenFileDialog { Filter = filter };
             return openFileDialog.ShowDialog() == true ? openFileDialog.FileName : null;
         }
 
-        private string OpenSaveFileDialog()
+        private string OpenSaveFileDialog(string filter)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog { Filter = _fileHandleFacade.GetSupportedSaveTypes() };
-            return saveFileDialog.ShowDialog() == true ? saveFileDialog.FileName : null;
-        }
+            if (filter == null)
+            {
+                filter = _fileHandleFacade.GetSupportedSaveTypes();
 
-        private void ShowErrorDialog(string error)
-        {
-            MessageBox.Show(error, "Alert", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            SaveFileDialog saveFileDialog = new SaveFileDialog { Filter = filter };
+            return saveFileDialog.ShowDialog() == true ? saveFileDialog.FileName : null;
         }
 
         private void HandleCommand(List<Key> keyCombo)
@@ -161,7 +172,7 @@ namespace DPA_Musicsheets.ViewModels
             shortcutHandler.HandleShortCut(keyCombo, OpenOpenFileDialog, OpenSaveFileDialog, out action, out param);
             if (action != ActionOption.Undefined)
             {
-                firstCommand.Execute(action, param);
+                firstCommand.Execute(action, param, lilyPondText);
             }
         }
 

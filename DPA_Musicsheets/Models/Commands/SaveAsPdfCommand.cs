@@ -10,13 +10,12 @@ namespace DPA_Musicsheets.Models.Commands
             ActionOption = ActionOption.SaveAsPdf;
         }
 
-        public override void Execute(ActionOption actionOption, string parameter = null)
+        public override void Execute(ActionOption actionOption, string parameter = null, string parameter2 = null)
         {
             if (CanExecute(actionOption))
             {
                 // parameter is the file path
-                //TODO fix this so it has the content
-                //FileHandleFacade.SaveFile(parameter);
+                FileHandleFacade.SaveFile(parameter, parameter2);
             }
             else
             {

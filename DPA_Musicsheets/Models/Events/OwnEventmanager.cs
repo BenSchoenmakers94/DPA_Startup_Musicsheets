@@ -19,6 +19,7 @@ namespace DPA_Musicsheets.Models.Events
                 {"onClose", new Event<object>() },
                 {"setLilyPondText", new Event<object>() },
                 {"setStaffs", new Event<object>() },
+                {"changedLilyPond", new Event<object>() }
             };
         }
 
