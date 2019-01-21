@@ -17,13 +17,23 @@ namespace DPA_Musicsheets.Models.Domain
 
     public enum Length
     {
-        Semibreve = 1,
-        Minim = 2,
-        Crotchet = 4,
-        Quaver = 8,
-        Semiquaver = 16,
-        Demisemiquaver = 32,
-        Hemidemisemiquaver = 64
+        d128th = 128,
+        d32th = 32,
+        d64th = 64,
+        Eighth = 8,
+        Half = 2,
+        Quarter = 4,
+        Sixteenth = 16,
+        Unknown = 0,
+        Whole= 1
+        
+        //Semibreve = 1,
+        //Minim = 2,
+        //Crotchet = 4,
+        //Quaver = 8,
+        //Semiquaver = 16,
+        //Demisemiquaver = 32,
+        //Hemidemisemiquaver = 64
     }
 
     public enum Intonation

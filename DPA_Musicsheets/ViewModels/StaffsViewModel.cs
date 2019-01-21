@@ -3,6 +3,9 @@ using GalaSoft.MvvmLight;
 using PSAMControlLibrary;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using DPA_Musicsheets.IO;
+using DPA_Musicsheets.Models.Domain;
 using DPA_Musicsheets.Models.Events;
 
 namespace DPA_Musicsheets.ViewModels
@@ -11,12 +14,14 @@ namespace DPA_Musicsheets.ViewModels
     {
         // These staffs will be bound to.
         public ObservableCollection<MusicalSymbol> Staffs { get; }
+        private readonly FileHandleFacade fileHandleFacade;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public StaffsViewModel()
+        public StaffsViewModel(FileHandleFacade fileHandleFacade)
         {
+            this.fileHandleFacade = fileHandleFacade;
             Staffs = new ObservableCollection<MusicalSymbol>();
             OwnEventmanager.Manager.Subscribe("setStaffs", SetStaffs);
         }
@@ -25,16 +30,15 @@ namespace DPA_Musicsheets.ViewModels
         /// SetStaffs fills the observablecollection with new symbols. 
         /// We don't want to reset the collection because we don't want other classes to create an observable collection.
         /// </summary>
-        /// <param name="obj">The new symbols to show.</param>
+        /// <param name="obj">External score to convert</param>
         public void SetStaffs(object obj)
         {
-            //TODO convert incoming Domain staffs to MusicalSymbols
-            //IList<MusicalSymbol> symbols = (IList<MusicalSymbol>) obj;
-            //Staffs.Clear();
-            //foreach (var symbol in symbols)
-            //{
-            //    Staffs.Add(symbol);
-            //}
+            IList<MusicalSymbol> symbols = fileHandleFacade.GetWpfMusicalSymbols((Score) obj);
+            Staffs.Clear();
+            foreach (var symbol in symbols)
+            {
+                Staffs.Add(symbol);
+            }
         }
     }
 }

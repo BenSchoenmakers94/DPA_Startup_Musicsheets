@@ -111,6 +111,7 @@
     <Compile Include="Interpreters\GenericInterpreter.cs" />
     <Compile Include="Interpreters\LilyPond\LilyPondInterpreter.cs" />
     <Compile Include="Interpreters\Midi\MidiInterpreter.cs" />
+    <Compile Include="Interpreters\WpfStaffs\WpfStaffInterpreter.cs" />
     <Compile Include="IO\FileHandleFacade.cs" />
     <Compile Include="IO\GenericHandler.cs" />
     <Compile Include="IO\LilyPond\LilyPondFileHandler.cs" />

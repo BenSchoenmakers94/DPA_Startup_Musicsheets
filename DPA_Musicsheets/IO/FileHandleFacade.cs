@@ -3,10 +3,13 @@ using System.Linq;
 using DPA_Musicsheets.Creation.LilyPond;
 using DPA_Musicsheets.Interpreters.LilyPond;
 using DPA_Musicsheets.Interpreters.Midi;
+using DPA_Musicsheets.Interpreters.WpfStaffs;
 using DPA_Musicsheets.IO.LilyPond;
 using DPA_Musicsheets.IO.Midi;
 using DPA_Musicsheets.IO.Pdf;
+using DPA_Musicsheets.Models.Domain;
 using DPA_Musicsheets.Models.Events;
+using PSAMControlLibrary;
 
 namespace DPA_Musicsheets.IO
 {
@@ -76,6 +79,11 @@ namespace DPA_Musicsheets.IO
                     return;
                 }
             }
+        }
+
+        public List<MusicalSymbol> GetWpfMusicalSymbols(Score song)
+        {
+            return new WpfStaffInterpreter().Convert(song);
         }
     }
 }
