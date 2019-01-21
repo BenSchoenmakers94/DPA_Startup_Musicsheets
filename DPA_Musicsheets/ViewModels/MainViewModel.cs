@@ -87,7 +87,7 @@ namespace DPA_Musicsheets.ViewModels
             if (!downKeyQueue.Any() || downKeyQueue[downKeyQueue.Count - 1] != key)
             {
                 downKeyQueue.Add(key);
-                if (!shortcutHandler.IsPartialMatch(upKeyQueue))
+                if (!shortcutHandler.IsPartialMatch(downKeyQueue))
                 {
                     // Empty queue if the current items don't match up.
                     downKeyQueue.Clear();
