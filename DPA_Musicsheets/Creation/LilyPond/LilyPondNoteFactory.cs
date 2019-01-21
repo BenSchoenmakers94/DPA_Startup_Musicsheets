@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DPA_Musicsheets.Models.Domain;
@@ -7,15 +8,34 @@ namespace DPA_Musicsheets.Creation.LilyPond
 {
     public class LilyPondNoteFactory : AbstractNoteFactory<string>
     {
+        private Dictionary<Tones, int> octaveKeeper_;
+
+        public LilyPondNoteFactory()
+        {
+            this.octaveKeeper_ = new Dictionary<Tones, int>
+            {
+                { Tones.A, 0 },
+                { Tones.B, 0 },
+                { Tones.C, 0 },
+                { Tones.D, 0 },
+                { Tones.E, 0 },
+                { Tones.F, 0 },
+                { Tones.G, 0 },
+            };
+        }
+
         public override Note create(string noteSpecifier)
         {
             bool connected = noteSpecifier.Contains("~");
-            int higherPitch =  noteSpecifier.Count(f => f == '\'');
-            int lowerPitch = noteSpecifier.Count(f => f == ',');
-            var totalPitch = 4 + higherPitch + lowerPitch;
             var tone = getTone(noteSpecifier);
             var intonation = getIntonation(noteSpecifier);
             Length length = calculateDuration(noteSpecifier);
+
+            int higherPitch =  noteSpecifier.Count(f => f == '\'');
+            int lowerPitch = noteSpecifier.Count(f => f == ',');
+            octaveKeeper_[tone] += higherPitch + lowerPitch;
+            var totalPitch = 4 + octaveKeeper_[tone];
+           
             return new Note(tone, totalPitch, intonation) {dot = noteSpecifier.EndsWith("."), length = length, connected = connected};
         }
 
