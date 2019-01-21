@@ -28,6 +28,7 @@ namespace DPA_Musicsheets.IO
                 midiFileHandler,
                 pdfFileHandler
             };
+            OwnEventmanager.Manager.Subscribe("reRender", RegenerateBasedOnEditor);
         }
 
         public string GetSupportedSaveTypes()
@@ -84,6 +85,17 @@ namespace DPA_Musicsheets.IO
         public List<MusicalSymbol> GetWpfMusicalSymbols(Score song)
         {
             return new WpfStaffInterpreter().Convert(song);
+        }
+
+        private void RegenerateBasedOnEditor(object obj)
+        {
+            string lilypond = (string) obj;
+            GenericHandler handler = handlers.First(h => h.fileType == "LilyPond");
+            var score = new LilyPondInterpreter(new LilyPondNoteFactory()).ConvertBack(lilypond);
+
+            OwnEventmanager.Manager.DispatchEvent("setStaffs", score);
+
+            //TODO regenerate midi to play
         }
     }
 }

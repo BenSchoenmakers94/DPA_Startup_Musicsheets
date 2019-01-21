@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using DPA_Musicsheets.IO;
 using DPA_Musicsheets.Models.Events;
 
 namespace DPA_Musicsheets.ViewModels.States.Editor
@@ -20,6 +21,7 @@ namespace DPA_Musicsheets.ViewModels.States.Editor
             {
                 if ((DateTime.Now - lastChange).TotalMilliseconds >= MILLISECONDS_BEFORE_CHANGE_HANDLED)
                 {
+                    OwnEventmanager.Manager.DispatchEvent("reRender", owner.LilypondText);
                     owner.UndoCommand.RaiseCanExecuteChanged();
                     OwnEventmanager.Manager.DispatchEvent("changeEditorState", "Idle");
                 }
