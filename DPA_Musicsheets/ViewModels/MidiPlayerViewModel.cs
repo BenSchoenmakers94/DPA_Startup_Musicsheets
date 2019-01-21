@@ -4,6 +4,7 @@ using GalaSoft.MvvmLight.CommandWpf;
 using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
+using DPA_Musicsheets.IO;
 using DPA_Musicsheets.Models.Events;
 using DPA_Musicsheets.ViewModels.States.Player;
 
@@ -46,7 +47,7 @@ namespace DPA_Musicsheets.ViewModels
             }
         }
 
-        public MidiPlayerViewModel(MusicLoader musicLoader)
+        public MidiPlayerViewModel(FileHandleFacade fileHandleFacade)
         {
             // The OutputDevice is a midi device on the midi channel of your computer.
             // The audio will be streamed towards this output.
@@ -63,9 +64,6 @@ namespace DPA_Musicsheets.ViewModels
                 _running = false;
             };
 
-            // TODO: Can we use some sort of eventing system so the managers layer doesn't have to know the viewmodel layer?
-            musicLoader.MidiPlayerViewModel = this;
-
             states = new Dictionary<string, PlayerState>
             {
                 {"Playing", new PlayingState(_sequencer) },
@@ -77,9 +75,9 @@ namespace DPA_Musicsheets.ViewModels
             OwnEventmanager.Manager.Subscribe("changePlayerState", ChangeState);
         }
 
-        public void ChangeState(string newState)
+        public void ChangeState(object obj)
         {
-            current = states[newState];
+            current = states[(string)obj];
             current.GoInto(this);
         }
 

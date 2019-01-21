@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using DPA_Musicsheets.Creation.LilyPond;
+using DPA_Musicsheets.Interpreters.LilyPond;
 using DPA_Musicsheets.Interpreters.Midi;
 using DPA_Musicsheets.Models.Domain;
 using Sanford.Multimedia.Midi;
@@ -29,7 +31,10 @@ namespace DPA_Musicsheets.IO.Midi
             var midiSequence = new Sequence();
             midiSequence.Load(fileName);
 
-            return interpreter.ConvertBack(midiSequence);
+            Score res = interpreter.ConvertBack(midiSequence);
+
+            LilypondText = new LilyPondInterpreter(new LilyPondNoteFactory()).Convert(res);
+            return res;
         }
 
         protected override bool save(string fileName, Score staff)

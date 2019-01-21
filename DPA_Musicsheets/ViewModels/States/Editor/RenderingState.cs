@@ -21,8 +21,6 @@ namespace DPA_Musicsheets.ViewModels.States.Editor
                 if ((DateTime.Now - lastChange).TotalMilliseconds >= MILLISECONDS_BEFORE_CHANGE_HANDLED)
                 {
                     owner.UndoCommand.RaiseCanExecuteChanged();
-
-                    owner.MusicLoader.LoadLilypondIntoWpfStaffsAndMidi(owner.LilypondText);
                     OwnEventmanager.Manager.DispatchEvent("changeEditorState", "Idle");
                 }
             }, TaskScheduler.FromCurrentSynchronizationContext()); // Request from main thread.

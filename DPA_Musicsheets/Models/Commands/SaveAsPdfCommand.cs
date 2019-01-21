@@ -1,20 +1,21 @@
-﻿using DPA_Musicsheets.Managers;
+﻿using DPA_Musicsheets.IO;
+using DPA_Musicsheets.Managers;
 
 namespace DPA_Musicsheets.Models.Commands
 {
     public class SaveAsPdfCommand : Command
     {
-        public SaveAsPdfCommand(MusicLoader musicLoader) : base(musicLoader)
+        public SaveAsPdfCommand(FileHandleFacade fileHandleFacade) : base(fileHandleFacade)
         {
             ActionOption = ActionOption.SaveAsPdf;
         }
 
-        public override void Execute(ActionOption actionOption, string parameter = null)
+        public override void Execute(ActionOption actionOption, string parameter = null, string parameter2 = null)
         {
             if (CanExecute(actionOption))
             {
                 // parameter is the file path
-                MusicLoader.SaveToPDF(parameter);
+                FileHandleFacade.SaveFile(parameter, parameter2);
             }
             else
             {

@@ -87,16 +87,16 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
                         switch (clefString)
                         {
                             case "treble":
-                                newClef = new Clef(ClefType.G);
+                                newClef = new Clef(ClefType.GClef);
                                 break;
                             case "alto":
-                                newClef = new Clef(ClefType.C);
+                                newClef = new Clef(ClefType.CClef);
                                 break;
                             case "bass":
-                                newClef = new Clef(ClefType.F);
+                                newClef = new Clef(ClefType.FClef);
                                 break;
                             default:
-                                newClef = new Clef(ClefType.G);
+                                newClef = new Clef(ClefType.GClef);
                                 break;
                         }
                         score.staffsInScore.Last().clef = newClef;

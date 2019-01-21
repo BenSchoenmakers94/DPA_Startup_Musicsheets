@@ -26,6 +26,7 @@ namespace DPA_Musicsheets.ViewModels
         private readonly Originator saveOriginator;
         private EditorState current;
         private readonly Dictionary<string, EditorState> states;
+        private readonly FileHandleFacade fileHandleFacade;
 
         /// <summary>
         /// This text will be in the textbox.
@@ -44,6 +45,7 @@ namespace DPA_Musicsheets.ViewModels
                 }
                 _text = value;
                 RaisePropertyChanged(() => LilypondText);
+                OwnEventmanager.Manager.DispatchEvent("changedLilyPond", _text);
             }
         }
 
@@ -61,12 +63,8 @@ namespace DPA_Musicsheets.ViewModels
 
         private bool _textChangedByLoad;
 
-        public LilypondViewModel(MainViewModel mainViewModel, MusicLoader musicLoader)
+        public LilypondViewModel(FileHandleFacade fileHandleFacade)
         {
-            // TODO: Can we use some sort of eventing system so the managers layer doesn't have to know the viewmodel layer and viewmodels don't know each other?
-            // And viewmodels don't 
-            MusicLoader = musicLoader;
-            MusicLoader.LilypondViewModel = this;
             _text = "Your lilypond text will appear here.";
             textCursorIndex = 0;
             OwnEventmanager.Manager.Subscribe("addLilyPondToken", AddSymbol);
@@ -86,10 +84,13 @@ namespace DPA_Musicsheets.ViewModels
             ChangeState("Idle");
             OwnEventmanager.Manager.Subscribe("changeEditorState", ChangeState);
             OwnEventmanager.Manager.Subscribe("onClose", OnClose);
+            OwnEventmanager.Manager.Subscribe("setLilyPondText", LilypondTextLoaded);
+            this.fileHandleFacade = fileHandleFacade;
         }
 
-        public void LilypondTextLoaded(string text)
+        public void LilypondTextLoaded(object obj)
         {
+            string text = (string)obj;
             _textChangedByLoad = true;
             undoStack.Clear();
             redoStack.Clear();
@@ -99,13 +100,13 @@ namespace DPA_Musicsheets.ViewModels
             _textChangedByLoad = false;
         }
 
-        private void ChangeState(string newState)
+        private void ChangeState(object obj)
         {
-            current = states[newState];
+            current = states[(string)obj];
             current.GoInto(this);
         }
 
-        private void OnClose(string param)
+        private void OnClose(object obj)
         {
             if (saved.State != LilypondText)
             {
@@ -117,7 +118,7 @@ namespace DPA_Musicsheets.ViewModels
             }
         }
 
-        private void AddSymbol(string symbol) => LilypondText = LilypondText?.Insert(textCursorIndex, symbol);
+        private void AddSymbol(object obj) => LilypondText = LilypondText?.Insert(textCursorIndex, (string)obj);
 
         /// <summary>
         /// This occurs when the text in the textbox has changed. This can either be by loading or typing.
@@ -163,16 +164,15 @@ namespace DPA_Musicsheets.ViewModels
 
         private void Save()
         {
-            FileChoiceHandler fch = new FileChoiceHandler();
-            SaveFileDialog saveFileDialog = new SaveFileDialog { Filter = fch.GetSupportedSaveTypes() };
+            SaveFileDialog saveFileDialog = new SaveFileDialog { Filter = fileHandleFacade.GetSupportedSaveTypes() };
             bool success = false;
             if (saveFileDialog.ShowDialog() == true)
             {
                 string extension = Path.GetExtension(saveFileDialog.FileName);
-                if (fch.IsValidFile(extension))
+                if (fileHandleFacade.IsValidFile(extension))
                 {
                     success = true;
-                    fch.SaveFile(saveFileDialog.FileName, LilypondText);
+                    fileHandleFacade.SaveFile(saveFileDialog.FileName, LilypondText);
                 }
                 else
                 {

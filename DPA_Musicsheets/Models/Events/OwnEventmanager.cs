@@ -6,40 +6,33 @@ namespace DPA_Musicsheets.Models.Events
     public class OwnEventmanager
     {
         private static OwnEventmanager instance;
-        private Dictionary<string, Event<string>> events;
+        private Dictionary<string, Event<object>> events;
 
         private OwnEventmanager()
         {
-            events = new Dictionary<string, Event<string>>
+            events = new Dictionary<string, Event<object>>
             {
-                {"addLilyPondToken", new Event<string>() }  ,
-                {"changeInformativeText", new Event<string>() },
-                {"changeEditorState", new Event<string>() },
-                {"changePlayerState", new Event<string>() },
-                {"onClose", new Event<string>() }
+                {"addLilyPondToken", new Event<object>() }  ,
+                {"changeInformativeText", new Event<object>() },
+                {"changeEditorState", new Event<object>() },
+                {"changePlayerState", new Event<object>() },
+                {"onClose", new Event<object>() },
+                {"setLilyPondText", new Event<object>() },
+                {"setStaffs", new Event<object>() },
+                {"changedLilyPond", new Event<object>() }
             };
         }
 
-        public void DispatchEvent(string name, string argument)
+        public void DispatchEvent(string name, object argument)
         {
             events[name].Dispatch(argument);
         }
 
-        public void Subscribe(string name, Action<string> callback)
+        public void Subscribe(string name, Action<object> callback)
         {
             events[name].Subscribe(callback);
         }
 
-        public static OwnEventmanager Manager
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new OwnEventmanager();
-                }
-                return instance;
-            }
-        }
+        public static OwnEventmanager Manager => instance ?? (instance = new OwnEventmanager());
     }
 }

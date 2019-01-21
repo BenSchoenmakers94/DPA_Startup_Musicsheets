@@ -1,11 +1,9 @@
-﻿using DPA_Musicsheets.Managers;
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 using DPA_Musicsheets.IO;
 using DPA_Musicsheets.Models.Commands;
@@ -20,7 +18,7 @@ namespace DPA_Musicsheets.ViewModels
         private string _fileName;
         private readonly Command firstCommand;
         private readonly ShortcutHandler shortcutHandler;
-        private readonly FileChoiceHandler fileChoiceHandler;
+        private readonly FileHandleFacade _fileHandleFacade;
         public string FileName
         {
             get => _fileName;
@@ -30,6 +28,8 @@ namespace DPA_Musicsheets.ViewModels
                 RaisePropertyChanged(() => FileName);
             }
         }
+
+        private string lilyPondText;        
 
         /// <summary>
         /// The current state can be used to display some text.
@@ -42,30 +42,32 @@ namespace DPA_Musicsheets.ViewModels
             set { _currentState = value; RaisePropertyChanged(() => CurrentState); }
         }
 
-        private MusicLoader _musicLoader;
-
-        public MainViewModel(MusicLoader musicLoader)
+        public MainViewModel(FileHandleFacade fileHandleFacade)
         {
-            // TODO: Can we use some sort of eventing system so the managers layer doesn't have to know the viewmodel layer?
-            _musicLoader = musicLoader;
             FileName = @"Files/Alle-eendjes-zwemmen-in-het-water.mid";
             downKeyQueue = new List<Key>();
             upKeyQueue = new List<Key>();
             CommandBuilder cb = new CommandBuilder();
             shortcutHandler = new ShortcutHandler();
-            firstCommand = cb.BuildCommands(musicLoader);
+            firstCommand = cb.BuildCommands(fileHandleFacade);
             OwnEventmanager.Manager.Subscribe("changeInformativeText", ChangeInformativeMessage);
-            fileChoiceHandler = new FileChoiceHandler();
+            OwnEventmanager.Manager.Subscribe("changedLilyPond", SetLilyPondText);
+            _fileHandleFacade = new FileHandleFacade();
         }
 
-        private void ChangeInformativeMessage(string message)
+        private void SetLilyPondText(object obj)
         {
-            CurrentState = message;
+            lilyPondText = (string) obj;
+        }
+
+        private void ChangeInformativeMessage(object obj)
+        {
+            CurrentState = (string)obj;
         }
 
         public ICommand OpenFileCommand => new RelayCommand(() =>
         {
-            FileName = OpenOpenFileDialog();
+            FileName = OpenOpenFileDialog(null);
         });
 
         public ICommand LoadCommand => new RelayCommand(() =>
@@ -141,21 +143,26 @@ namespace DPA_Musicsheets.ViewModels
            Console.WriteLine($@"Key Up: {key}");
        });
 
-        private string OpenOpenFileDialog()
+        private string OpenOpenFileDialog(string filter)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog { Filter = fileChoiceHandler.GetSupportedLoadTypes()};
+            if (filter == null)
+            {
+                filter = _fileHandleFacade.GetSupportedLoadTypes(); 
+
+            }
+            OpenFileDialog openFileDialog = new OpenFileDialog { Filter = filter };
             return openFileDialog.ShowDialog() == true ? openFileDialog.FileName : null;
         }
 
-        private string OpenSaveFileDialog()
+        private string OpenSaveFileDialog(string filter)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog { Filter = fileChoiceHandler.GetSupportedSaveTypes() };
-            return saveFileDialog.ShowDialog() == true ? saveFileDialog.FileName : null;
-        }
+            if (filter == null)
+            {
+                filter = _fileHandleFacade.GetSupportedSaveTypes();
 
-        private void ShowErrorDialog(string error)
-        {
-            MessageBox.Show(error, "Alert", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            SaveFileDialog saveFileDialog = new SaveFileDialog { Filter = filter };
+            return saveFileDialog.ShowDialog() == true ? saveFileDialog.FileName : null;
         }
 
         private void HandleCommand(List<Key> keyCombo)
@@ -165,13 +172,13 @@ namespace DPA_Musicsheets.ViewModels
             shortcutHandler.HandleShortCut(keyCombo, OpenOpenFileDialog, OpenSaveFileDialog, out action, out param);
             if (action != ActionOption.Undefined)
             {
-                firstCommand.Execute(action, param);
+                firstCommand.Execute(action, param, lilyPondText);
             }
         }
 
         public ICommand OnWindowClosingCommand => new RelayCommand(() =>
         {
-            OwnEventmanager.Manager.DispatchEvent("onClose", "");
+            OwnEventmanager.Manager.DispatchEvent("onClose", null);
             ViewModelLocator.Cleanup();
         });
         #endregion Focus and key commands, these can be used for implementing hotkeys
