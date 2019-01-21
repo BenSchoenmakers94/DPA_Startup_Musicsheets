@@ -46,8 +46,11 @@ namespace DPA_Musicsheets.Interpreters.WpfStaffs
         public void Visit(Note note)
         {
             string not = ((char)note.tone).ToString().ToUpper();
-            Console.WriteLine(not);
-            musicSymbols.Add(new PSAMControlLibrary.Note(not, (int) note.intonation, note.pitch, (PSAMControlLibrary.MusicalSymbolDuration) note.length, NoteStemDirection.Up, NoteTieType.None, new List<NoteBeamType>{NoteBeamType.Single}));
+            var notNote = new PSAMControlLibrary.Note(not, (int) note.intonation, note.pitch,
+                (PSAMControlLibrary.MusicalSymbolDuration) note.length, NoteStemDirection.Up, NoteTieType.None,
+                new List<NoteBeamType> {NoteBeamType.Single});
+            if (note.dot) notNote.NumberOfDots = 1;
+            musicSymbols.Add(notNote);
         }
 
         public void Visit(Bar bar)

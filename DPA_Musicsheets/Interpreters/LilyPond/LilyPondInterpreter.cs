@@ -103,7 +103,8 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
                         break;
                     case LilypondTokenKind.Rest:
                         Rest rest = new Rest();
-
+                        rest.length = (Length) int.Parse(Regex.Match(current.Value, @"\d+").Value);
+                        score.staffsInScore.Last().bars.Last().notes.Add(rest);
                         break;
                 }
                 current = current.NextToken;

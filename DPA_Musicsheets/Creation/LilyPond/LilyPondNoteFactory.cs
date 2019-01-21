@@ -8,34 +8,25 @@ namespace DPA_Musicsheets.Creation.LilyPond
 {
     public class LilyPondNoteFactory : AbstractNoteFactory<string>
     {
-        private Dictionary<Tones, int> octaveKeeper_;
+        private int octave;
 
         public LilyPondNoteFactory()
         {
-            this.octaveKeeper_ = new Dictionary<Tones, int>
-            {
-                { Tones.A, 0 },
-                { Tones.B, 0 },
-                { Tones.C, 0 },
-                { Tones.D, 0 },
-                { Tones.E, 0 },
-                { Tones.F, 0 },
-                { Tones.G, 0 },
-            };
+            octave = -1;
         }
 
         public override Note create(string noteSpecifier)
         {
             bool connected = noteSpecifier.Contains("~");
-            var tone = getTone(noteSpecifier);
             var intonation = getIntonation(noteSpecifier);
             Length length = calculateDuration(noteSpecifier);
 
             int higherPitch =  noteSpecifier.Count(f => f == '\'');
             int lowerPitch = noteSpecifier.Count(f => f == ',');
-            octaveKeeper_[tone] += higherPitch + lowerPitch;
-            var totalPitch = 4 + octaveKeeper_[tone];
-           
+
+            Tones tone = getTone(noteSpecifier);
+            octave += higherPitch + lowerPitch;
+            var totalPitch = 4 + octave; 
             return new Note(tone, totalPitch, intonation) {dot = noteSpecifier.EndsWith("."), length = length, connected = connected};
         }
 
@@ -47,7 +38,7 @@ namespace DPA_Musicsheets.Creation.LilyPond
 
         protected override Intonation getIntonation(string intonationSpecifier)
         {
-            if (intonationSpecifier.Contains("fi"))
+            if (intonationSpecifier.Contains("fi "))
                 return Intonation.Flat;
             else if (intonationSpecifier.Contains("gi"))
                 return Intonation.Sharp;
