@@ -33,16 +33,6 @@ namespace DPA_Musicsheets.Models.Events
             events[name].Subscribe(callback);
         }
 
-        public static OwnEventmanager Manager
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new OwnEventmanager();
-                }
-                return instance;
-            }
-        }
+        public static OwnEventmanager Manager => instance ?? (instance = new OwnEventmanager());
     }
 }
