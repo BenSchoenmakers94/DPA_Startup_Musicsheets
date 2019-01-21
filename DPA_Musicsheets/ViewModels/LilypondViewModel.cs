@@ -26,6 +26,7 @@ namespace DPA_Musicsheets.ViewModels
         private readonly Originator saveOriginator;
         private EditorState current;
         private readonly Dictionary<string, EditorState> states;
+        private readonly FileHandleFacade fileHandleFacade;
 
         /// <summary>
         /// This text will be in the textbox.
@@ -61,7 +62,7 @@ namespace DPA_Musicsheets.ViewModels
 
         private bool _textChangedByLoad;
 
-        public LilypondViewModel()
+        public LilypondViewModel(FileHandleFacade fileHandleFacade)
         {
             _text = "Your lilypond text will appear here.";
             textCursorIndex = 0;
@@ -82,7 +83,8 @@ namespace DPA_Musicsheets.ViewModels
             ChangeState("Idle");
             OwnEventmanager.Manager.Subscribe("changeEditorState", ChangeState);
             OwnEventmanager.Manager.Subscribe("onClose", OnClose);
-            OwnEventmanager.Manager.Subscribe("setLilypond", LilypondTextLoaded);
+            OwnEventmanager.Manager.Subscribe("setLilyPondText", LilypondTextLoaded);
+            this.fileHandleFacade = fileHandleFacade;
         }
 
         public void LilypondTextLoaded(object obj)
@@ -161,16 +163,15 @@ namespace DPA_Musicsheets.ViewModels
 
         private void Save()
         {
-            FileHandleFacade fch = new FileHandleFacade();
-            SaveFileDialog saveFileDialog = new SaveFileDialog { Filter = fch.GetSupportedSaveTypes() };
+            SaveFileDialog saveFileDialog = new SaveFileDialog { Filter = fileHandleFacade.GetSupportedSaveTypes() };
             bool success = false;
             if (saveFileDialog.ShowDialog() == true)
             {
                 string extension = Path.GetExtension(saveFileDialog.FileName);
-                if (fch.IsValidFile(extension))
+                if (fileHandleFacade.IsValidFile(extension))
                 {
                     success = true;
-                    fch.SaveFile(saveFileDialog.FileName, LilypondText);
+                    fileHandleFacade.SaveFile(saveFileDialog.FileName, LilypondText);
                 }
                 else
                 {

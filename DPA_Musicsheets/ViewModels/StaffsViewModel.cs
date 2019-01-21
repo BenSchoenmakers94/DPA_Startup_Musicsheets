@@ -29,12 +29,12 @@ namespace DPA_Musicsheets.ViewModels
         public void SetStaffs(object obj)
         {
             //TODO convert incoming Domain staffs to MusicalSymbols
-            IList<MusicalSymbol> symbols = (IList<MusicalSymbol>) obj;
-            Staffs.Clear();
-            foreach (var symbol in symbols)
-            {
-                Staffs.Add(symbol);
-            }
+            //IList<MusicalSymbol> symbols = (IList<MusicalSymbol>) obj;
+            //Staffs.Clear();
+            //foreach (var symbol in symbols)
+            //{
+            //    Staffs.Add(symbol);
+            //}
         }
     }
 }

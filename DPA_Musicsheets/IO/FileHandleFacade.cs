@@ -60,8 +60,10 @@ namespace DPA_Musicsheets.IO
 
         public void Load(string fileName)
         {
-            //TODO dispatch set string func of the lilypond editor
-            OwnEventmanager.Manager.DispatchEvent("setStaffs", handlers.First(h => h.canHandle(fileName)).loadFile(fileName));
+            var handler = handlers.First(h => h.canHandle(fileName));
+            OwnEventmanager.Manager.DispatchEvent("setStaffs", handler.loadFile(fileName));
+            OwnEventmanager.Manager.DispatchEvent("setLilyPondText", handler.LilypondText);
+
         }
 
         public void SaveFile(string path, string content)

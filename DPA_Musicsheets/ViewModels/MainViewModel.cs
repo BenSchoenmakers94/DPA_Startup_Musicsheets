@@ -42,15 +42,14 @@ namespace DPA_Musicsheets.ViewModels
             set { _currentState = value; RaisePropertyChanged(() => CurrentState); }
         }
 
-        public MainViewModel()
+        public MainViewModel(FileHandleFacade fileHandleFacade)
         {
             FileName = @"Files/Alle-eendjes-zwemmen-in-het-water.mid";
             downKeyQueue = new List<Key>();
             upKeyQueue = new List<Key>();
             CommandBuilder cb = new CommandBuilder();
             shortcutHandler = new ShortcutHandler();
-            //TODO change to facade
-            firstCommand = cb.BuildCommands(new FileHandleFacade());
+            firstCommand = cb.BuildCommands(fileHandleFacade);
             OwnEventmanager.Manager.Subscribe("changeInformativeText", ChangeInformativeMessage);
             _fileHandleFacade = new FileHandleFacade();
         }

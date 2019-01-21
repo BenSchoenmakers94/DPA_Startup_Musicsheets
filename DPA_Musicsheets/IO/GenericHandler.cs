@@ -49,5 +49,7 @@ namespace DPA_Musicsheets.IO
 
             return sb.ToString();
         }
+
+        public string LilypondText { get; set; }
     }
 }
