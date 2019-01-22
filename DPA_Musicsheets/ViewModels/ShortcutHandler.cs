@@ -17,7 +17,7 @@ namespace DPA_Musicsheets.ViewModels
             {
                 {new List<Key>{ Key.LeftCtrl, Key.S }, ActionOption.SaveAsLilyPond},
                 {new List<Key>{ Key.LeftCtrl, Key.S, Key.P }, ActionOption.SaveAsPdf},
-                {new List<Key>{ Key.LeftAlt, Key.A, Key.LeftAlt, Key.P }, ActionOption.SaveAsPdf},
+                {new List<Key>{ Key.LeftAlt, Key.A, Key.P, Key.LeftAlt }, ActionOption.SaveAsPdf},
                 {new List<Key>{ Key.LeftCtrl, Key.O }, ActionOption.OpenFile},
                 {new List<Key>{ Key.LeftAlt, Key.C }, ActionOption.AddClefTreble},
                 {new List<Key>{ Key.LeftAlt, Key.S }, ActionOption.AddTempo},
