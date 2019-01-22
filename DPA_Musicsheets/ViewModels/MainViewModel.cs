@@ -87,7 +87,7 @@ namespace DPA_Musicsheets.ViewModels
             if (!downKeyQueue.Any() || downKeyQueue[downKeyQueue.Count - 1] != key)
             {
                 downKeyQueue.Add(key);
-                if (!shortcutHandler.IsPartialMatch(downKeyQueue))
+                if (!shortcutHandler.IsPartialMatch(downKeyQueue) && !shortcutHandler.IsPartialMatch(upKeyQueue))
                 {
                     // Empty queue if the current items don't match up.
                     downKeyQueue.Clear();
@@ -109,7 +109,7 @@ namespace DPA_Musicsheets.ViewModels
        {
            // Get key or system key (in case of using ALT)
            Key key = e.Key == Key.System ? e.SystemKey : e.Key;
-           if (!upKeyQueue.Contains(key))
+           if (!upKeyQueue.Any() || upKeyQueue[upKeyQueue.Count - 1] != key)
            {
                upKeyQueue.Add(key);
            }
@@ -122,13 +122,6 @@ namespace DPA_Musicsheets.ViewModels
                if (upKeyQueue[0] != Key.LeftAlt && upKeyQueue[0] != Key.RightAlt)
                {
                    upKeyQueue.Reverse();
-               }
-               if (upKeyQueue[0] == Key.LeftAlt && upKeyQueue[upKeyQueue.Count - 1] == Key.LeftAlt)
-               {
-                   int magic = upKeyQueue.Count - 2;
-                   var keep = upKeyQueue[magic];
-                   upKeyQueue[magic] = upKeyQueue[magic + 1];
-                   upKeyQueue[magic + 1] = keep;
                }
                if (shortcutHandler.HasShortCut(upKeyQueue))
                {
