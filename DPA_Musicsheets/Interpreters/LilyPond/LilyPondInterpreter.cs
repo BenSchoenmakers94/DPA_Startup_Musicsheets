@@ -52,6 +52,8 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
 
             var current = tokens.First.Value;
 
+            factory_.Octave = -1;
+
             while (current != null)
             {
                 switch (current.TokenKind)

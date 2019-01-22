@@ -8,11 +8,11 @@ namespace DPA_Musicsheets.Creation.LilyPond
 {
     public class LilyPondNoteFactory : AbstractNoteFactory<string>
     {
-        private int octave;
+        public int Octave { get; set; }
 
         public LilyPondNoteFactory()
         {
-            octave = -1;
+            Octave = -1;
         }
 
         public override Note create(string noteSpecifier)
@@ -25,8 +25,9 @@ namespace DPA_Musicsheets.Creation.LilyPond
             int lowerPitch = noteSpecifier.Count(f => f == ',');
 
             Tones tone = getTone(noteSpecifier);
-            octave += higherPitch + lowerPitch;
-            var totalPitch = 4 + octave; 
+            Octave += higherPitch;
+            Octave -= lowerPitch;
+            var totalPitch = 4 + Octave; 
             return new Note(tone, totalPitch, intonation) {dot = noteSpecifier.EndsWith("."), length = length, connected = connected};
         }
 
