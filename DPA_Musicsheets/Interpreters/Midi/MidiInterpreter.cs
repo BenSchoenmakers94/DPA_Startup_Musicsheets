@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DPA_Musicsheets.Creation.Midi;
 using DPA_Musicsheets.Interpreters.Midi.MidiMessaging;
@@ -10,6 +11,8 @@ namespace DPA_Musicsheets.Interpreters.Midi
 {
     public class MidiInterpreter : GenericInterpreter<Sequence>, IVisitor
     {
+        private Length timeSignatureLengthNote;
+
         public MidiInterpreter()
         {
             midiMessagingService = new MidiMessagingService();
@@ -48,7 +51,6 @@ namespace DPA_Musicsheets.Interpreters.Midi
             InstrumentTrack.Insert(PreviousNoteAbsoluteTicks, MetaMessage.EndOfTrackMessage);
 
             return Sequence;
-
         }
 
         public override Score ConvertBack(Sequence transformable)
@@ -78,9 +80,51 @@ namespace DPA_Musicsheets.Interpreters.Midi
             return score;
         }
 
-        private void InsertTempo(Metronome metronome)
+        public void Visit(Rest rest)
         {
-            // Calculate tempo
+            throw new NotImplementedException();
+        }
+
+        public void Visit(Note note)
+        {
+            if (note.tone != Tones.NO_TONE)
+            {
+                // Calculate duration
+                double absoluteLength = 1.0 / (1.0 / (int)note.length);
+                if (note.dot)
+                {
+                    absoluteLength += (absoluteLength / 2.0);
+                }
+
+                double relationToQuartNote = (int)timeSignatureLengthNote / 4.0;
+                double percentageOfBeatNote = (1.0 / (int)timeSignatureLengthNote) / absoluteLength;
+                double deltaTicks = (Sequence.Division / relationToQuartNote) / percentageOfBeatNote;
+
+                List<string> notesOrderWithCrosses = new List<string>() { "c", "cis", "d", "dis", "e", "f", "fis", "g", "gis", "a", "ais", "b" };
+                int noteHeight = notesOrderWithCrosses.IndexOf(note.tone.ToString().ToLower()) + ((note.pitch + 1) * 12);
+                noteHeight += (int)note.intonation;
+                InstrumentTrack.Insert(PreviousNoteAbsoluteTicks, new ChannelMessage(ChannelCommand.NoteOn, 1, noteHeight, 90)); // Data2 = volume
+
+                PreviousNoteAbsoluteTicks += (int)deltaTicks;
+                InstrumentTrack.Insert(PreviousNoteAbsoluteTicks, new ChannelMessage(ChannelCommand.NoteOn, 1, noteHeight, 0)); // Data2 = volume
+            }
+        }
+
+        public void Visit(Bar bar)
+        {
+            foreach (var note in bar.notes)
+            {
+                note.Accept(this);
+            }
+        }
+
+        public void Visit(Clef clef)
+        {
+           
+        }
+
+        public void Visit(Metronome metronome)
+        {
             int speed = (60000000 / metronome.getBeatsPerMinute().Last());
             byte[] tempo = new byte[3];
             tempo[0] = (byte)((speed >> 16) & 0xff);
@@ -89,42 +133,13 @@ namespace DPA_Musicsheets.Interpreters.Midi
             MetaTrack.Insert(PreviousNoteAbsoluteTicks, new MetaMessage(MetaType.Tempo, tempo));
         }
 
-        private void InsertTimeSignature(TimeSignature timeSignature)
+        public void Visit(TimeSignature timeSignature)
         {
             byte[] timeSignatureBytes = new byte[4];
             timeSignatureBytes[0] = (byte)timeSignature.beatsPerMeasure;
             timeSignatureBytes[1] = (byte)timeSignature.lengthOfOneBeat;
+            this.timeSignatureLengthNote = timeSignature.lengthOfOneBeat;
             MetaTrack.Insert(PreviousNoteAbsoluteTicks, new MetaMessage(MetaType.TimeSignature, timeSignatureBytes));
-        }
-
-        public void Visit(Rest rest)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(Note note)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(Bar bar)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(Clef clef)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(Metronome metronome)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(TimeSignature timeSignature)
-        {
-            throw new NotImplementedException();
         }
     }
 }

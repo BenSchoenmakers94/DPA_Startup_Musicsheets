@@ -27,9 +27,6 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
 
             foreach (var staff in song.staffsInScore)
             {
-                staff.clef.Accept(this);
-                staff.timeSignature.Accept(this);
-                staff.metronome.Accept(this);
                 foreach (var bar in staff.bars)
                 {
                     foreach (var note in bar.notes)
@@ -65,18 +62,18 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
                         var rangeMeasures = tempoSections.Last().Split('-');
                         if (rangeMeasures.Length > 1)
                         {
-                            score.staffsInScore.Last().metronome = new Metronome(lengthOfBeat,
+                            score.staffsInScore.Last().bars.Last().notes.Add(new Metronome(lengthOfBeat,
                                 new Tuple<int, int>(Int32.Parse(rangeMeasures.First()),
-                                    Int32.Parse(rangeMeasures.Last())));
+                                    Int32.Parse(rangeMeasures.Last()))));
                         }
                         else
                         {
-                            score.staffsInScore.Last().metronome = new Metronome(lengthOfBeat, Int32.Parse(rangeMeasures.First()));
+                            score.staffsInScore.Last().bars.Last().notes.Add(new Metronome(lengthOfBeat, Int32.Parse(rangeMeasures.First())));
                         }
                         break;
                     case LilypondTokenKind.Time:
                         var timeSignatureSections = current.NextToken.Value.Split('/');
-                        score.staffsInScore.Last().timeSignature = new TimeSignature(Int32.Parse(timeSignatureSections.First()), (Length)Int32.Parse(timeSignatureSections.Last()));
+                        score.staffsInScore.Last().bars.Last().notes.Add(new TimeSignature(Int32.Parse(timeSignatureSections.First()), (Length)Int32.Parse(timeSignatureSections.Last())));
                         break;
                     case LilypondTokenKind.Bar:
                         score.staffsInScore.Last().addBar(new Bar(RepeatType.NoRepeat));
@@ -99,7 +96,7 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
                                 newClef = new Clef(ClefType.GClef);
                                 break;
                         }
-                        score.staffsInScore.Last().clef = newClef;
+                        score.staffsInScore.Last().bars.Last().notes.Add(newClef);
                         break;
                     case LilypondTokenKind.Rest:
                         Rest rest = new Rest();

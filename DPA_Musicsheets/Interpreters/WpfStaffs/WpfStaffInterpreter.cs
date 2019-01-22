@@ -23,9 +23,6 @@ namespace DPA_Musicsheets.Interpreters.WpfStaffs
             musicSymbols.Clear();
             foreach (var staff in song.staffsInScore)
             {
-                staff.clef.Accept(this);
-                staff.timeSignature.Accept(this);
-                staff.metronome.Accept(this);
                 foreach (var bar in staff.bars)
                 {
                     foreach (var note in bar.notes)

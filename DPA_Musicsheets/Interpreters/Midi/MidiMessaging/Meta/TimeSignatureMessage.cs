@@ -11,7 +11,7 @@ namespace DPA_Musicsheets.Interpreters.Midi.MidiMessaging.Meta
         {
             byte[] timeSignatureBytes = metaMessage.GetBytes();
             var timeSignature = new TimeSignature(timeSignatureBytes[0], (Length)(int) Math.Pow(2, timeSignatureBytes[1]));
-            score.staffsInScore.Last().timeSignature = timeSignature;
+            score.staffsInScore.Last().bars.Last().notes.Add(timeSignature);
         }
     }
 }
