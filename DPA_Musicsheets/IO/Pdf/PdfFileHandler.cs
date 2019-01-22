@@ -14,6 +14,7 @@ namespace DPA_Musicsheets.IO.Pdf
             CanLoad = false;
             this.fileType = "Pdf";
             this.possibleExtensions = new List<string> { ".pdf"};
+            CanGenerateSequence = false;
         }
         protected override Score load(string filename)
         {

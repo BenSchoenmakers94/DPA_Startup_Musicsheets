@@ -7,11 +7,13 @@ namespace DPA_Musicsheets.Interpreters.Midi.MidiMessaging.Meta
 {
     public class TimeSignatureMessage : IMetaMessageWorker
     { 
-        public void handleMessage(MetaMessage metaMessage, Score score)
+        public void handleMessage(MetaMessage metaMessage, MidiInterpreter midi, Score score)
         {
             byte[] timeSignatureBytes = metaMessage.GetBytes();
             var timeSignature = new TimeSignature(timeSignatureBytes[0], (Length)(int) Math.Pow(2, timeSignatureBytes[1]));
-            score.staffsInScore.Last().timeSignature = timeSignature;
+            midi.beatsPerMessage = timeSignature.beatsPerMeasure;
+            midi.timeSignatureLengthNote = timeSignature.lengthOfOneBeat;
+            score.staffsInScore.Last().bars.Last().notes.Add(timeSignature);
         }
     }
 }

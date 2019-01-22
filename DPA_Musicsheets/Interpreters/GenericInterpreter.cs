@@ -8,5 +8,7 @@ namespace DPA_Musicsheets.Interpreters
         public abstract T Convert(Score song);
 
         public abstract Score ConvertBack(T transformable);
+
+        public bool CanGenerateSequence { get; set; }
     }
 }

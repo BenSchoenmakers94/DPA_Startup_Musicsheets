@@ -73,6 +73,12 @@ namespace DPA_Musicsheets.ViewModels
 
             ChangeState("Stopped");
             OwnEventmanager.Manager.Subscribe("changePlayerState", ChangeState);
+            OwnEventmanager.Manager.Subscribe("setSequence", SetSequence);
+        }
+
+        private void SetSequence(object obj)
+        {
+            MidiSequence = (Sequence) obj;
         }
 
         public void ChangeState(object obj)

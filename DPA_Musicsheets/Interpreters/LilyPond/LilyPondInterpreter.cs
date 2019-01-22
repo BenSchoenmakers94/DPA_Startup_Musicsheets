@@ -18,6 +18,7 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
         public LilyPondInterpreter(LilyPondNoteFactory factory)
         {
             factory_ = factory;
+            CanGenerateSequence = false;
         }
 
         public override string Convert(Score song)
@@ -27,9 +28,6 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
 
             foreach (var staff in song.staffsInScore)
             {
-                staff.clef.Accept(this);
-                staff.timeSignature.Accept(this);
-                staff.metronome.Accept(this);
                 foreach (var bar in staff.bars)
                 {
                     foreach (var note in bar.notes)
@@ -67,18 +65,18 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
                         var rangeMeasures = tempoSections.Last().Split('-');
                         if (rangeMeasures.Length > 1)
                         {
-                            score.staffsInScore.Last().metronome = new Metronome(lengthOfBeat,
+                            score.staffsInScore.Last().bars.Last().notes.Add(new Metronome(lengthOfBeat,
                                 new Tuple<int, int>(Int32.Parse(rangeMeasures.First()),
-                                    Int32.Parse(rangeMeasures.Last())));
+                                    Int32.Parse(rangeMeasures.Last()))));
                         }
                         else
                         {
-                            score.staffsInScore.Last().metronome = new Metronome(lengthOfBeat, Int32.Parse(rangeMeasures.First()));
+                            score.staffsInScore.Last().bars.Last().notes.Add(new Metronome(lengthOfBeat, Int32.Parse(rangeMeasures.First())));
                         }
                         break;
                     case LilypondTokenKind.Time:
                         var timeSignatureSections = current.NextToken.Value.Split('/');
-                        score.staffsInScore.Last().timeSignature = new TimeSignature(Int32.Parse(timeSignatureSections.First()), (Length)Int32.Parse(timeSignatureSections.Last()));
+                        score.staffsInScore.Last().bars.Last().notes.Add(new TimeSignature(Int32.Parse(timeSignatureSections.First()), (Length)Int32.Parse(timeSignatureSections.Last())));
                         break;
                     case LilypondTokenKind.Bar:
                         score.staffsInScore.Last().addBar(new Bar(RepeatType.NoRepeat));
@@ -101,7 +99,7 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
                                 newClef = new Clef(ClefType.GClef);
                                 break;
                         }
-                        score.staffsInScore.Last().clef = newClef;
+                        score.staffsInScore.Last().bars.Last().notes.Add(newClef);
                         break;
                     case LilypondTokenKind.Rest:
                         Rest rest = new Rest();
@@ -164,7 +162,7 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
         public void Visit(Rest rest)
         {
             stringBuilder_.Append("r");
-            stringBuilder_.Append(rest.length + " ");
+            stringBuilder_.Append((int) rest.length + " ");
         }
 
         public void Visit(Note note)
@@ -174,7 +172,7 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
             if (note.pitch == 5) stringBuilder_.Append(',');
             if (note.intonation == Intonation.Flat) stringBuilder_.Append('\'');
             if (note.intonation == Intonation.Sharp) stringBuilder_.Append('\'');
-            stringBuilder_.Append(note.length);
+            stringBuilder_.Append((int) note.length);
             if (note.dot) stringBuilder_.Append('.');
             if (note.connected) stringBuilder_.Append("~");
             stringBuilder_.Append(" ");
@@ -194,13 +192,13 @@ namespace DPA_Musicsheets.Interpreters.LilyPond
         {
             var list = metronome.getBeatsPerMinute();
             stringBuilder_.AppendLine(list?.Count > 1
-                ? $"\\tempo {metronome.tempoIndication}={list?[0]}-{list?[1]} "
-                : $"\\tempo {metronome.tempoIndication}={list?[0]} ");
+                ? $"\\tempo {(int) metronome.tempoIndication}={list?[0]}-{list?[1]} "
+                : $"\\tempo {(int) metronome.tempoIndication}={list?[0]} ");
         }
 
         public void Visit(TimeSignature timeSignature)
         {
-            stringBuilder_.AppendLine($"\\time {timeSignature.beatsPerMeasure}/{timeSignature.lengthOfOneBeat} ");
+            stringBuilder_.AppendLine($"\\time {timeSignature.beatsPerMeasure}/{(int)timeSignature.lengthOfOneBeat} ");
         }
     }
 }

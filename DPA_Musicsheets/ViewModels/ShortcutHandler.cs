@@ -70,35 +70,11 @@ namespace DPA_Musicsheets.ViewModels
             return ActionOption.Undefined;
         }
 
-        public void HandleShortCut(List<Key> pressedKeys, Func<string, string> openPathCallBack, Func<string, string> savePathCallBack, out ActionOption act, out string param)
+        public void HandleShortCut(List<Key> pressedKeys, out ActionOption act, out string param)
         {
             param = null;
             act = FindShortCutAction(pressedKeys);
-            //TODO move popup stuff?
-            if (act == ActionOption.OpenFile)
-            {
-                param = openPathCallBack.Invoke(null);
-                if (param == null)
-                {
-                    act = ActionOption.Undefined;
-                }
-            }
-            else if (act == ActionOption.SaveAsLilyPond)
-            {
-                param = savePathCallBack.Invoke("Lilypond|*.ly");
-                if (param == null)
-                {
-                    act = ActionOption.Undefined;
-                }
-            } else if (act == ActionOption.SaveAsPdf)
-            {
-                param = savePathCallBack.Invoke("PDF|*.pdf");
-                if (param == null)
-                {
-                    act = ActionOption.Undefined;
-                }
-            }
-            else if (act == ActionOption.AddTime)
+            if (act == ActionOption.AddTime)
             {
                 if (pressedKeys.Count == 2 || pressedKeys[2] == Key.D4)
                 {

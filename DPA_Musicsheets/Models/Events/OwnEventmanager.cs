@@ -12,7 +12,7 @@ namespace DPA_Musicsheets.Models.Events
         {
             events = new Dictionary<string, Event<object>>
             {
-                {"addLilyPondToken", new Event<object>() }  ,
+                {"addLilyPondToken", new Event<object>() },
                 {"changeInformativeText", new Event<object>() },
                 {"changeEditorState", new Event<object>() },
                 {"changePlayerState", new Event<object>() },
@@ -20,7 +20,8 @@ namespace DPA_Musicsheets.Models.Events
                 {"setLilyPondText", new Event<object>() },
                 {"setStaffs", new Event<object>() },
                 {"changedLilyPond", new Event<object>() },
-                {"reRender", new Event<object>() }
+                {"reRender", new Event<object>() },
+                {"setSequence", new Event<object>() }
             };
         }
 
