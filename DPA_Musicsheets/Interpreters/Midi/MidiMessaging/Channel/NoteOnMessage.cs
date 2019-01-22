@@ -14,6 +14,7 @@ namespace DPA_Musicsheets.Interpreters.Midi.MidiMessaging.Channel
                 midiInterpreter.CurrentNote = new MidiNoteFactory().create(channelMessage.Data1);
 
                 midiInterpreter.StartedNoteIsClosed = false;
+
             }
             else if (!midiInterpreter.StartedNoteIsClosed)
             {
@@ -21,8 +22,8 @@ namespace DPA_Musicsheets.Interpreters.Midi.MidiMessaging.Channel
                         midiInterpreter.PreviousNoteAbsoluteTicks, 
                         midiInterpreter.MidiEvent.AbsoluteTicks, 
                         midiInterpreter.Sequence.Division, 
-                        midiInterpreter.Rhythm.Item1, 
-                        midiInterpreter.Rhythm.Item2, out bool dot);
+                        (int) midiInterpreter.timeSignatureLengthNote, 
+                        midiInterpreter.beatsPerMessage, out bool dot);
 
                 midiInterpreter.CurrentNote.dot = dot;
 
@@ -58,7 +59,9 @@ namespace DPA_Musicsheets.Interpreters.Midi.MidiMessaging.Channel
                 hasDot = true;
                 percentageOfBeatNote = percentageOfBeatNote / 3 * 2;
             }
-            percentageOfBeatNote = percentageOfBeatNote / 4;
+            percentageOfBeatNote = percentageOfBeatNote * 4;
+
+            //percentageOfBeatNote = percentageOfBeatNote * beatNote;
 
             return (Length)(int)percentageOfBeatNote;
         }

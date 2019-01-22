@@ -72,7 +72,7 @@ namespace DPA_Musicsheets.ViewModels
 
         public ICommand LoadCommand => new RelayCommand(() =>
         {
-            firstCommand.Execute(ActionOption.OpenFile, FileName);
+            firstCommand.Execute(ActionOption.OpenFile, OpenOpenFileDialog, OpenSaveFileDialog, FileName);
         });
 
         #region Focus and key commands, these can be used for implementing hotkeys
@@ -169,10 +169,10 @@ namespace DPA_Musicsheets.ViewModels
         {
             ActionOption action;
             string param;
-            shortcutHandler.HandleShortCut(keyCombo, OpenOpenFileDialog, OpenSaveFileDialog, out action, out param);
+            shortcutHandler.HandleShortCut(keyCombo, out action, out param);
             if (action != ActionOption.Undefined)
             {
-                firstCommand.Execute(action, param, lilyPondText);
+                firstCommand.Execute(action, OpenOpenFileDialog, OpenSaveFileDialog, param, lilyPondText);
             }
         }
 

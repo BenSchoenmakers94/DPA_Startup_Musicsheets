@@ -65,9 +65,11 @@ namespace DPA_Musicsheets.IO
         public void Load(string fileName)
         {
             var handler = handlers.First(h => h.canHandle(fileName));
-            OwnEventmanager.Manager.DispatchEvent("setStaffs", handler.loadFile(fileName));
+            Score s = handler.loadFile(fileName);
+            OwnEventmanager.Manager.DispatchEvent("setStaffs", s);
             OwnEventmanager.Manager.DispatchEvent("setLilyPondText", handler.LilypondText);
-
+            var se = handlers.First(h => h.CanGenerateSequence).GenerateSequence(s);
+            OwnEventmanager.Manager.DispatchEvent("setSequence", se);
         }
 
         public void SaveFile(string path, string content)
@@ -95,7 +97,8 @@ namespace DPA_Musicsheets.IO
 
             OwnEventmanager.Manager.DispatchEvent("setStaffs", score);
 
-            //TODO regenerate midi to play
+            var se = handlers.First(h => h.CanGenerateSequence).GenerateSequence(score);
+            OwnEventmanager.Manager.DispatchEvent("setSequence", se);
         }
     }
 }

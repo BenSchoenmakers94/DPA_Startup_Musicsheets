@@ -6,7 +6,7 @@ namespace DPA_Musicsheets.Interpreters.Midi.MidiMessaging.Meta
 {
     public class MetronomeMessage : IMetaMessageWorker
     {
-        public void handleMessage(MetaMessage metaMessage, Score score)
+        public void handleMessage(MetaMessage metaMessage, MidiInterpreter midi, Score score)
         {
             byte[] tempoBytes = metaMessage.GetBytes();
             int tempo = (tempoBytes[0] & 0xff) << 16 | (tempoBytes[1] & 0xff) << 8 | (tempoBytes[2] & 0xff);

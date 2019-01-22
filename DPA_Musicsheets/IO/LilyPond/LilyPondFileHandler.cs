@@ -18,6 +18,7 @@ namespace DPA_Musicsheets.IO.LilyPond
             this.possibleExtensions = new List<string> { ".ly" };
             CanSave = true;
             CanLoad = true;
+            CanGenerateSequence = false;
         }
 
         public static List<string> GetExtensions()
