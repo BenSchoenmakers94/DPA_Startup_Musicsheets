@@ -9,17 +9,14 @@ namespace DPA_Musicsheets.Interpreters.Midi.MidiMessaging.Channel
     {
         public void handleMessage(ChannelMessage channelMessage, MidiInterpreter midiInterpreter, Score score)
         {
-            if (channelMessage.Data2 > 0) // Data2 = loudness
+            if (channelMessage.Data2 > 0)
             {
-                //create note with height
                 midiInterpreter.CurrentNote = new MidiNoteFactory().create(channelMessage.Data1);
 
-                //previousMidiKey = channelMessage.Data1;
                 midiInterpreter.StartedNoteIsClosed = false;
             }
             else if (!midiInterpreter.StartedNoteIsClosed)
             {
-                // Finish the previous note with the length.
                 midiInterpreter.CurrentNote.length = GetNoteLength(
                         midiInterpreter.PreviousNoteAbsoluteTicks, 
                         midiInterpreter.MidiEvent.AbsoluteTicks, 
