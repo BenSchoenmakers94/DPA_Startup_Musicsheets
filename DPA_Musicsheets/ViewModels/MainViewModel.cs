@@ -8,6 +8,7 @@ using System.Windows.Input;
 using DPA_Musicsheets.IO;
 using DPA_Musicsheets.Models.Commands;
 using DPA_Musicsheets.Models.Events;
+using DPA_Musicsheets.ViewModels.Converters;
 
 namespace DPA_Musicsheets.ViewModels
 {
@@ -75,11 +76,15 @@ namespace DPA_Musicsheets.ViewModels
             firstCommand.Execute(ActionOption.OpenFile, OpenOpenFileDialog, OpenSaveFileDialog, FileName);
         });
 
-        #region Focus and key commands, these can be used for implementing hotkeys
-        public ICommand OnLostFocusCommand => new RelayCommand(() =>
+        public ICommand HandleButtonCommand => new RelayCommand<string>(input =>
         {
-            Console.WriteLine(@"Maingrid Lost focus");
+            ActionOption command;
+            command = (ActionOption) new ActionOptionIntConverter().Convert(int.Parse(input), null, null, null);
+            firstCommand.Execute(command, OpenOpenFileDialog, OpenSaveFileDialog, null, lilyPondText);
         });
+
+
+        #region Focus and key commands, these can be used for implementing hotkeys
 
         public ICommand OnKeyDownCommand => new RelayCommand<KeyEventArgs>(e =>
         {
@@ -98,10 +103,6 @@ namespace DPA_Musicsheets.ViewModels
                     // Only set to true if it's not a match, otherwise normal keyboard input will be considered handled when it's not.
                     e.Handled = true;
                 }
-            }
-            else
-            {
-                Console.WriteLine($@"Key down: {e.Key}");
             }
         });
 

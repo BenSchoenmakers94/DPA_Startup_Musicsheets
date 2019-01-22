@@ -4,9 +4,12 @@
         xmlns:local="clr-namespace:DPA_Musicsheets.Views"
         xmlns:command="http://www.galasoft.ch/mvvmlight"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-        xmlns:PSAMWPFControl="clr-namespace:PSAMWPFControlLibrary;assembly=PSAMWPFControlLibrary"
+        xmlns:converters="clr-namespace:DPA_Musicsheets.ViewModels.Converters"
         Title="DPA Musicsheets" Height="700" Width="1200"
         DataContext="{Binding MainViewModel, Source={StaticResource Locator}}">
+    <Window.Resources>
+        <converters:ActionOptionIntConverter x:Key="converter" />
+    </Window.Resources>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing" >
             <command:EventToCommand Command="{Binding OnWindowClosingCommand}" PassEventArgsToCommand="True"  />
@@ -15,6 +18,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="50" />
             <RowDefinition Height="30" />
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -39,8 +43,17 @@
             <Button Command="{Binding LoadCommand}" Width="75" Content="Load" Margin="5"/>
             <local:MidiPlayerCtrl Margin="5" Grid.Row="2" Grid.Column="1"/>
         </StackPanel>
-        <local:LilypondViewerCtrl Margin="5" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2"/>
-        <Label Content="{Binding CurrentState, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"/>
-        <local:StaffViewerCtrl Margin="5" Grid.Row="2" Grid.Column="1"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+            <Label VerticalAlignment="Center">Command Panel:</Label>
+            <Button Command="{Binding HandleButtonCommand}" CommandParameter="1" Width="50" Content="Open" Margin="5"/>
+            <Button Command="{Binding HandleButtonCommand}" CommandParameter="2" Width="100" Content="Save as Lilypond" Margin="5"/>
+            <Button Command="{Binding HandleButtonCommand}" CommandParameter="3" Width="75" Content="Save as pdf" Margin="5"/>
+            <Button Command="{Binding HandleButtonCommand}" CommandParameter="5" Width="75" Content="Add clef" Margin="5"/>
+            <Button Command="{Binding HandleButtonCommand}" CommandParameter="6" Width="75" Content="Add tempo" Margin="5"/>
+            <Button Command="{Binding HandleButtonCommand}" CommandParameter="5" Width="75" Content="Add time 4/4" Margin="5"/>
+        </StackPanel>
+        <local:LilypondViewerCtrl Margin="5" Grid.Row="2" Grid.Column="0" Grid.RowSpan="2"/>
+        <Label Content="{Binding CurrentState, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch"/>
+        <local:StaffViewerCtrl Margin="5" Grid.Row="3" Grid.Column="1"/>
     </Grid>
 </Window>

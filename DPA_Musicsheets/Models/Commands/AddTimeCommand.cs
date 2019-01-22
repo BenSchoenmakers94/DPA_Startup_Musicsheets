@@ -16,6 +16,10 @@ namespace DPA_Musicsheets.Models.Commands
             // parameter is the optional additional time
             if (CanExecute(actionOption))
             {
+                if (parameter == null)
+                {
+                    parameter = "4/4";
+                }
                 OwnEventmanager.Manager.DispatchEvent("addLilyPondToken", "\\time " + parameter);
             }
             else

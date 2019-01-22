@@ -149,6 +149,7 @@
     <Compile Include="Models\LilypondToken.cs" />
     <Compile Include="Models\LilypondTokenKind.cs" />
     <Compile Include="Models\Visitor\IVisitor.cs" />
+    <Compile Include="ViewModels\Converters\ActionOptionIntConverter.cs" />
     <Compile Include="ViewModels\Editor\Memento\Memento.cs" />
     <Compile Include="ViewModels\Editor\Memento\Originator.cs" />
     <Compile Include="ViewModels\States\Editor\BlockedState.cs" />
