@@ -17,7 +17,7 @@
   <Class Name="DPA_Musicsheets.Creation.LilyPond.LilyPondNoteFactory" Collapsed="true">
     <Position X="0.5" Y="1.75" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAIAAAAAAAAQAAQAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <HashCode>AAAACAAAIAAAAAAAAQAAQAAAAAAAAAAAAABAAAAAAAA=</HashCode>
       <FileName>Creation\LilyPond\LilyPondNoteFactory.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -32,28 +32,29 @@
   <Class Name="DPA_Musicsheets.Interpreters.Midi.MidiInterpreter">
     <Position X="9.5" Y="2.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAABBAAAAAAAQAEIQAAAQAACgAAgAIgABAAAEAABA=</HashCode>
       <FileName>Interpreters\Midi\MidiInterpreter.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="DPA_Musicsheets.Interpreters.GenericInterpreter&lt;T&gt;">
     <Position X="8" Y="0.75" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAQAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Interpreters\GenericInterpreter.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="DPA_Musicsheets.IO.GenericHandler" Collapsed="true">
     <Position X="13.75" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAEAAQAAIKgAAAAAAYAAAAiAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAEQCQAAIKgAAAAAAYAQAAiAAAEAAAAAAAAAAAAAAA=</HashCode>
       <FileName>IO\GenericHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="DPA_Musicsheets.IO.FileHandleFacade">
     <Position X="19.5" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAABAAEAAAAAAAAAAAAAAAAAAAABABAAAAAQAAAA=</HashCode>
+      <HashCode>AAAAgABAAEAAAAAAAAAAAAgAAAAAAAFABAAAAAQAAAA=</HashCode>
       <FileName>IO\FileHandleFacade.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -70,7 +71,7 @@
   <Class Name="DPA_Musicsheets.IO.Midi.MidiFileHandler" Collapsed="true">
     <Position X="11.75" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAEAAAAICAAAAAAAAAAAAgAAAAAAAAAABAAAAAAAA=</HashCode>
+      <HashCode>AAAAEAAAAICAAAAAAAAAQAAgAAAAAAAAAABAAAAAAAA=</HashCode>
       <FileName>IO\Midi\MidiFileHandler.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -182,14 +183,9 @@
   <Class Name="DPA_Musicsheets.Models.Domain.Staff">
     <Position X="14.75" Y="5.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAABAAAAAAAAAAAABAAAAAAAAACAAAQIEAAAAAA=</HashCode>
+      <HashCode>AAAAAAABAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\Domain\Staff.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="timeSignature" />
-      <Property Name="metronome" />
-      <Property Name="clef" />
-    </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="bars" />
     </ShowAsCollectionAssociation>
@@ -235,7 +231,7 @@
   <Class Name="DPA_Musicsheets.Models.Commands.Command" Collapsed="true">
     <Position X="22" Y="8.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AgAAAAAAAAAAACQAAEAAAAAAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AgAAAAAAAAAAAAQAAEAAAABAAACAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\Commands\Command.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -290,7 +286,7 @@
   <Class Name="DPA_Musicsheets.ViewModels.LilypondViewModel">
     <Position X="10.75" Y="12.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>ACABAKAAAAACBCAACAAAIAACyIAgIAAMAAKAAAARgAg=</HashCode>
+      <HashCode>ACABAKAAAAACBCAACAAAIAACyIAgYAAMAAKAAAARgAg=</HashCode>
       <FileName>ViewModels\LilypondViewModel.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -315,8 +311,8 @@
     </AssociationLine>
     <AssociationLine Name="current" Type="DPA_Musicsheets.ViewModels.States.Player.PlayerState" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="19.25" Y="16.062" />
-        <Point X="19.625" Y="16.062" />
+        <Point X="19.25" Y="16.077" />
+        <Point X="19.625" Y="16.077" />
         <Point X="19.625" Y="15.5" />
         <Point X="23.75" Y="15.5" />
       </Path>
@@ -419,7 +415,7 @@
   <Enum Name="DPA_Musicsheets.Models.Domain.ClefType" Collapsed="true">
     <Position X="11.75" Y="9" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAmAAAAAA=</HashCode>
+      <HashCode>AAAABAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
       <FileName>Models\Domain\Clef.cs</FileName>
     </TypeIdentifier>
   </Enum>
@@ -433,7 +429,7 @@
   <Enum Name="DPA_Musicsheets.Models.Domain.Length" Collapsed="true">
     <Position X="9.5" Y="10.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAEAAAAAAAAAARAAAIAAAAAAAAIAACAACAAA=</HashCode>
+      <HashCode>AAgAAAAAAIAQAAAAAAAAJAAAAAEBAAACAAAAAAAAABA=</HashCode>
       <FileName>Models\Domain\Note.cs</FileName>
     </TypeIdentifier>
   </Enum>

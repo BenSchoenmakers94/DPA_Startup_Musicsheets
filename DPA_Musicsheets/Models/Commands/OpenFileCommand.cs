@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Windows.Input;
+﻿using System;
 using DPA_Musicsheets.IO;
-using DPA_Musicsheets.Managers;
 
 namespace DPA_Musicsheets.Models.Commands
 {
@@ -12,16 +10,15 @@ namespace DPA_Musicsheets.Models.Commands
             ActionOption = ActionOption.OpenFile;
         }
 
-        public override void Execute(ActionOption actionOption, string parameter = null, string parameter2 = null)
+        public override void Execute(ActionOption actionOption, Func<string, string> openPathCallBack, Func<string, string> savePathCallBack, string parameter = null, string parameter2 = null)
         {
             if (CanExecute(actionOption))
             {
-                //Parameter is the path to the file
-                FileHandleFacade.Load(parameter);
+                FileHandleFacade.Load(parameter ?? openPathCallBack.Invoke(null));
             }
             else
             {
-                Next.Execute(actionOption, parameter);
+                Next.Execute(actionOption, openPathCallBack, savePathCallBack, parameter, parameter2);
             }
         }
     }

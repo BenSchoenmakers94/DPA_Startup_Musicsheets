@@ -19,11 +19,17 @@ namespace DPA_Musicsheets.IO.Midi
             this.possibleExtensions = new List<string> { ".midi", ".mid" };
             CanSave = true;
             CanLoad = true;
+            CanGenerateSequence = true;
         }
 
         public string getSupportedFileTypeString()
         {
             return this.buildSupportedFileTypeString();
+        }
+
+        public override Sequence GenerateSequence(Score song)
+        {
+            return interpreter.Convert(song);
         }
 
         protected override Score load(string fileName)

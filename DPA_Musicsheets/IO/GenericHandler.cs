@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using DPA_Musicsheets.Models.Domain;
+using Sanford.Multimedia.Midi;
 
 namespace DPA_Musicsheets.IO
 {
@@ -11,6 +13,7 @@ namespace DPA_Musicsheets.IO
         public string fileType { get; protected set; }
         public bool CanSave { get; set; }
         public bool CanLoad { get; set; }
+        public bool CanGenerateSequence { get; set; }
         public Score loadFile(string fileName)
         {
             return canHandle(fileName) ? load(fileName) : null;
@@ -29,6 +32,11 @@ namespace DPA_Musicsheets.IO
         public bool canHandle(string filename)
         {
             return possibleExtensions.Contains(Path.GetExtension(filename));
+        }
+
+        public virtual Sequence GenerateSequence(Score song)
+        {
+            throw new NotImplementedException();
         }
 
         protected string buildSupportedFileTypeString()

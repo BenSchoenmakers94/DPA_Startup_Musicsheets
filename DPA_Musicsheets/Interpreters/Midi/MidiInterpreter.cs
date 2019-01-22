@@ -11,11 +11,13 @@ namespace DPA_Musicsheets.Interpreters.Midi
 {
     public class MidiInterpreter : GenericInterpreter<Sequence>, IVisitor
     {
-        private Length timeSignatureLengthNote;
+        public Length timeSignatureLengthNote { get; set; }
+        public int beatsPerMessage { get; set; }
 
         public MidiInterpreter()
         {
             midiMessagingService = new MidiMessagingService();
+            CanGenerateSequence = true;
         }
 
         public Sequence Sequence { get; set; }
@@ -55,12 +57,15 @@ namespace DPA_Musicsheets.Interpreters.Midi
 
         public override Score ConvertBack(Sequence transformable)
         {
+            Sequence = transformable;
             var score = new Score();
+            score.staffsInScore.Add(new Staff());
+            score.staffsInScore.Last().bars.Add(new Bar(RepeatType.NoRepeat));
             StartedNoteIsClosed = true;
             PreviousNoteAbsoluteTicks = 0;
 
-            var track = Sequence[0];
-            track.Merge(Sequence[1]);
+            var track = transformable[0];
+            track.Merge(transformable[1]);
 
             foreach (var midiEvent in track.Iterator())
             {
@@ -74,7 +79,7 @@ namespace DPA_Musicsheets.Interpreters.Midi
                 } else if (midiMessage.MessageType == MessageType.Meta)
                 {
                    var worker = midiMessagingService.GetMetaMessageWorker(midiMessage);
-                    worker.handleMessage((MetaMessage)midiMessage, score);
+                   worker?.handleMessage((MetaMessage)midiMessage, this, score);
                 }
             }
             return score;
@@ -82,7 +87,7 @@ namespace DPA_Musicsheets.Interpreters.Midi
 
         public void Visit(Rest rest)
         {
-            throw new NotImplementedException();
+            
         }
 
         public void Visit(Note note)
@@ -97,7 +102,7 @@ namespace DPA_Musicsheets.Interpreters.Midi
                 }
 
                 double relationToQuartNote = (int)timeSignatureLengthNote / 4.0;
-                double percentageOfBeatNote = (1.0 / (int)timeSignatureLengthNote) / absoluteLength;
+                double percentageOfBeatNote = 1.0 / (int)timeSignatureLengthNote / absoluteLength;
                 double deltaTicks = (Sequence.Division / relationToQuartNote) / percentageOfBeatNote;
 
                 List<string> notesOrderWithCrosses = new List<string>() { "c", "cis", "d", "dis", "e", "f", "fis", "g", "gis", "a", "ais", "b" };
@@ -136,6 +141,7 @@ namespace DPA_Musicsheets.Interpreters.Midi
         public void Visit(TimeSignature timeSignature)
         {
             byte[] timeSignatureBytes = new byte[4];
+            this.beatsPerMessage = timeSignature.beatsPerMeasure;
             timeSignatureBytes[0] = (byte)timeSignature.beatsPerMeasure;
             timeSignatureBytes[1] = (byte)timeSignature.lengthOfOneBeat;
             this.timeSignatureLengthNote = timeSignature.lengthOfOneBeat;

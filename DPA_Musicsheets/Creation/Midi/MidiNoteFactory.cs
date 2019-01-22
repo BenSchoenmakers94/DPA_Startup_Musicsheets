@@ -9,7 +9,7 @@ namespace DPA_Musicsheets.Creation.Midi
         {
             var tone = getTone(noteSpecifier);
             var intonation = getIntonation(noteSpecifier);
-            var pitch = noteSpecifier / 12 + 1;
+            var pitch = noteSpecifier / 12 - 1;
             return new Note(tone, pitch, intonation);
         }
 
