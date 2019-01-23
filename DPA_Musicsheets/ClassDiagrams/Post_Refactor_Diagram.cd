@@ -27,14 +27,20 @@
       <HashCode>AEAAAAgAAAAAAAQAAIAAAAAAAAgAAAAAAAAAAQAAAAA=</HashCode>
       <FileName>Interpreters\LilyPond\LilyPondInterpreter.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="factory_" />
+    </ShowAsAssociation>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="DPA_Musicsheets.Interpreters.Midi.MidiInterpreter">
-    <Position X="9.5" Y="2.75" Width="1.5" />
+    <Position X="9.5" Y="2.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAIAAABAAAAAAAAAEIQAAAQAACgAAgAIgABAAAEAABA=</HashCode>
+      <HashCode>AAAAABBAAAAAAAQAEIQAAAQAACgAAgAIoABAAAEAABA=</HashCode>
       <FileName>Interpreters\Midi\MidiInterpreter.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="midiMessagingService" />
+    </ShowAsAssociation>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="DPA_Musicsheets.Interpreters.GenericInterpreter&lt;T&gt;">
@@ -47,7 +53,7 @@
   <Class Name="DPA_Musicsheets.IO.GenericHandler" Collapsed="true">
     <Position X="13.75" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAEACQAAIKgAAAAAAYAAAAiAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAEQCQAAIKgAAAAAAYAQAAiAAAEAAAAAAAAAAAAAAA=</HashCode>
       <FileName>IO\GenericHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -101,7 +107,7 @@
       <Property Name="notes" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="DPA_Musicsheets.Models.Domain.Clef" Collapsed="true">
+  <Class Name="DPA_Musicsheets.Models.Domain.Clef">
     <Position X="11.75" Y="7.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAACAA=</HashCode>
@@ -267,7 +273,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="DPA_Musicsheets.Models.Events.Event&lt;T&gt;" Collapsed="true">
-    <Position X="17.25" Y="4.75" Width="1.5" />
+    <Position X="21.25" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAgAAAAAAAAAACAAAAAAAAAAAAACAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\Events\Event.cs</FileName>
@@ -329,7 +335,7 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="DPA_Musicsheets.ViewModels.Editor.Memento.Memento">
-    <Position X="5.75" Y="15.5" Width="1.5" />
+    <Position X="6" Y="15.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
       <FileName>ViewModels\Editor\Memento\Memento.cs</FileName>
@@ -350,7 +356,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="DPA_Musicsheets.ViewModels.States.Editor.BlockedState" Collapsed="true">
-    <Position X="16" Y="11.75" Width="1.5" />
+    <Position X="17.25" Y="13" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
       <FileName>ViewModels\States\Editor\BlockedState.cs</FileName>
@@ -364,7 +370,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="DPA_Musicsheets.ViewModels.States.Editor.RenderingState" Collapsed="true">
-    <Position X="20" Y="12.5" Width="1.5" />
+    <Position X="17.25" Y="12" Width="1.5" />
+    <InheritanceLine Type="DPA_Musicsheets.ViewModels.States.Editor.EditorState" FixedToPoint="true">
+      <Path>
+        <Point X="14.75" Y="13" />
+        <Point X="14.75" Y="12.312" />
+        <Point X="17.25" Y="12.312" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAQAAAAAAAAEA=</HashCode>
       <FileName>ViewModels\States\Editor\RenderingState.cs</FileName>
@@ -398,11 +411,59 @@
       <FileName>ViewModels\States\Player\StoppedState.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="DPA_Musicsheets.Interpreters.WpfStaffs.WpfStaffInterpreter" Collapsed="true">
+    <Position X="4" Y="3.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAQAAIAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interpreters\WpfStaffs\WpfStaffInterpreter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DPA_Musicsheets.ViewModels.MainViewModel">
+    <Position X="23.75" Y="2" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AgAwAAAABAACABQAAQQAACAABAAgAAKAAAAAAEBAEBA=</HashCode>
+      <FileName>ViewModels\MainViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="firstCommand" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DPA_Musicsheets.Interpreters.Midi.MidiMessaging.MidiMessagingService">
+    <Position X="13.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAABAABEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interpreters\Midi\MidiMessaging\MidiMessagingService.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="channelWorkers" />
+      <Field Name="metaWorkers" />
+    </ShowAsCollectionAssociation>
+  </Class>
   <Interface Name="DPA_Musicsheets.Models.Visitor.IVisitor" Collapsed="true">
     <Position X="6.25" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\Visitor\IVisitor.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DPA_Musicsheets.Interpreters.Midi.MidiMessaging.IChannelMessageWorker" Collapsed="true">
+    <Position X="17.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interpreters\Midi\MidiMessaging\Interface\IChannelMessageWorker.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DPA_Musicsheets.Interpreters.Midi.MidiMessaging.IMetaMessageWorker" Collapsed="true">
+    <Position X="17.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interpreters\Midi\MidiMessaging\Interface\IMetaMessageWorker.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Enum Name="DPA_Musicsheets.Models.Domain.RepeatType" Collapsed="true">
@@ -413,7 +474,7 @@
     </TypeIdentifier>
   </Enum>
   <Enum Name="DPA_Musicsheets.Models.Domain.ClefType" Collapsed="true">
-    <Position X="11.75" Y="9" Width="1.5" />
+    <Position X="11.75" Y="10" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAABAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
       <FileName>Models\Domain\Clef.cs</FileName>

@@ -4,11 +4,16 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using DPA_Musicsheets.IO;
 using DPA_Musicsheets.Models.Commands;
+using DPA_Musicsheets.Models.Domain;
 using DPA_Musicsheets.Models.Events;
 using DPA_Musicsheets.ViewModels.Converters;
+using PSAMControlLibrary;
+using Sanford.Multimedia.Midi;
+using Key = System.Windows.Input.Key;
 
 namespace DPA_Musicsheets.ViewModels
 {
@@ -53,6 +58,7 @@ namespace DPA_Musicsheets.ViewModels
             firstCommand = cb.BuildCommands(fileHandleFacade);
             OwnEventmanager.Manager.Subscribe("changeInformativeText", ChangeInformativeMessage);
             OwnEventmanager.Manager.Subscribe("changedLilyPond", SetLilyPondText);
+            OwnEventmanager.Manager.Subscribe("changeFilePath", ChangeFilePath);
             _fileHandleFacade = new FileHandleFacade();
         }
 
@@ -66,6 +72,11 @@ namespace DPA_Musicsheets.ViewModels
             CurrentState = (string)obj;
         }
 
+        private void ChangeFilePath(object obj)
+        {
+            FileName = (string) obj;
+        }
+
         public ICommand OpenFileCommand => new RelayCommand(() =>
         {
             FileName = OpenOpenFileDialog(null);
@@ -73,15 +84,34 @@ namespace DPA_Musicsheets.ViewModels
 
         public ICommand LoadCommand => new RelayCommand(() =>
         {
-            firstCommand.Execute(ActionOption.OpenFile, OpenOpenFileDialog, OpenSaveFileDialog, FileName);
+            Execute(ActionOption.OpenFile, OpenOpenFileDialog, OpenSaveFileDialog, FileName);
         });
 
         public ICommand HandleButtonCommand => new RelayCommand<string>(input =>
         {
             ActionOption command;
             command = (ActionOption) new ActionOptionIntConverter().Convert(int.Parse(input), null, null, null);
-            firstCommand.Execute(command, OpenOpenFileDialog, OpenSaveFileDialog, null, lilyPondText);
+            Execute(command, OpenOpenFileDialog, OpenSaveFileDialog, null, lilyPondText);
         });
+
+        private void Execute(ActionOption actionOption, Func<string, string> openPathCallBack,
+            Func<string, string> savePathCallBack, string parameter = null, string parameter2 = null)
+        {
+            try
+            {
+                firstCommand.Execute(actionOption, openPathCallBack, savePathCallBack, parameter, parameter2);
+            }
+            catch (Exception e)
+            {
+                FileName = @"Files/Alle-eendjes-zwemmen-in-het-water.mid";
+                OwnEventmanager.Manager.DispatchEvent("setLilyPondText", "");
+                OwnEventmanager.Manager.DispatchEvent("setSequence", new Sequence());
+                OwnEventmanager.Manager.DispatchEvent("setStaffs", new Score());
+                MessageBox.Show("Something went wrong. Please try again.", "Error Occured!", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                Console.WriteLine(@"Error: " + e.Message);
+            }
+        }
 
 
         #region Focus and key commands, these can be used for implementing hotkeys
@@ -134,7 +164,6 @@ namespace DPA_Musicsheets.ViewModels
                    upKeyQueue.Clear();
                }
            }
-           Console.WriteLine($@"Key Up: {key}");
        });
 
         private string OpenOpenFileDialog(string filter)
@@ -161,12 +190,10 @@ namespace DPA_Musicsheets.ViewModels
 
         private void HandleCommand(List<Key> keyCombo)
         {
-            ActionOption action;
-            string param;
-            shortcutHandler.HandleShortCut(keyCombo, out action, out param);
+            shortcutHandler.HandleShortCut(keyCombo, out ActionOption action, out string param);
             if (action != ActionOption.Undefined)
             {
-                firstCommand.Execute(action, OpenOpenFileDialog, OpenSaveFileDialog, param, lilyPondText);
+                Execute(action, OpenOpenFileDialog, OpenSaveFileDialog, param, lilyPondText);
             }
         }
 

@@ -21,7 +21,8 @@ namespace DPA_Musicsheets.Models.Events
                 {"setStaffs", new Event<object>() },
                 {"changedLilyPond", new Event<object>() },
                 {"reRender", new Event<object>() },
-                {"setSequence", new Event<object>() }
+                {"setSequence", new Event<object>() },
+                {"changeFilePath", new Event<object>() }
             };
         }
 
