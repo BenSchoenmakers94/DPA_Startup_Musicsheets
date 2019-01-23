@@ -1,5 +1,6 @@
 ﻿using System;
 using DPA_Musicsheets.IO;
+using DPA_Musicsheets.Models.Events;
 
 namespace DPA_Musicsheets.Models.Commands
 {
@@ -14,7 +15,17 @@ namespace DPA_Musicsheets.Models.Commands
         {
             if (CanExecute(actionOption))
             {
-                FileHandleFacade.Load(parameter ?? openPathCallBack.Invoke(null));
+                string path;
+                if (parameter == null)
+                {
+                    path = openPathCallBack.Invoke(null);
+                }
+                else
+                {
+                    path = parameter;
+                }
+                OwnEventmanager.Manager.DispatchEvent("changeFilePath", path);
+                FileHandleFacade.Load(path);
             }
             else
             {

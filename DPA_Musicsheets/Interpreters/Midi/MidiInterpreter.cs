@@ -75,7 +75,7 @@ namespace DPA_Musicsheets.Interpreters.Midi
                 if (midiMessage.MessageType == MessageType.Channel)
                 {
                    var worker = midiMessagingService.GetChannelMessageWorker(midiMessage);
-                   worker.handleMessage((ChannelMessage)midiMessage, this, score);
+                   worker?.handleMessage((ChannelMessage)midiMessage, this, score);
                 } else if (midiMessage.MessageType == MessageType.Meta)
                 {
                    var worker = midiMessagingService.GetMetaMessageWorker(midiMessage);

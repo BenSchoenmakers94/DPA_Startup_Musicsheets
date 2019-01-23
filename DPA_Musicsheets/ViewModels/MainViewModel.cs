@@ -58,6 +58,7 @@ namespace DPA_Musicsheets.ViewModels
             firstCommand = cb.BuildCommands(fileHandleFacade);
             OwnEventmanager.Manager.Subscribe("changeInformativeText", ChangeInformativeMessage);
             OwnEventmanager.Manager.Subscribe("changedLilyPond", SetLilyPondText);
+            OwnEventmanager.Manager.Subscribe("changeFilePath", ChangeFilePath);
             _fileHandleFacade = new FileHandleFacade();
         }
 
@@ -69,6 +70,11 @@ namespace DPA_Musicsheets.ViewModels
         private void ChangeInformativeMessage(object obj)
         {
             CurrentState = (string)obj;
+        }
+
+        private void ChangeFilePath(object obj)
+        {
+            FileName = (string) obj;
         }
 
         public ICommand OpenFileCommand => new RelayCommand(() =>
