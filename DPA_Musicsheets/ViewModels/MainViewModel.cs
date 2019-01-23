@@ -78,7 +78,7 @@ namespace DPA_Musicsheets.ViewModels
 
         public ICommand LoadCommand => new RelayCommand(() =>
         {
-            firstCommand.Execute(ActionOption.OpenFile, OpenOpenFileDialog, OpenSaveFileDialog, FileName);
+            Execute(ActionOption.OpenFile, OpenOpenFileDialog, OpenSaveFileDialog, FileName);
         });
 
         public ICommand HandleButtonCommand => new RelayCommand<string>(input =>
